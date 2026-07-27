@@ -182,13 +182,12 @@
         <h1>🕺💃 Bitácora de Pasos de Baile</h1>
         <p class="subtitle">Salsa, Bachata, Lindy Hop, Merengue, Porro y más</p>
 
-        <!-- Filtros Interactivos (AHORA SIN OWNER Y CON "RITMO") -->
+        <!-- Filtros Interactivos -->
         <div class="filters-panel">
             <div class="filter-group">
                 <label for="filtroEstilo">🎵 Ritmo</label>
                 <select id="filtroEstilo"><option value="">Todos</option></select>
             </div>
-            <!-- Filtro de Owner Paso ELIMINADO de la interfaz -->
             <div class="filter-group">
                 <label for="filtroNivel">📈 Nivel</label>
                 <select id="filtroNivel"><option value="">Todos</option></select>
@@ -210,7 +209,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('grid');
             const filtroEstilo = document.getElementById('filtroEstilo');
-            // Ya no existe filtroOwner en el HTML
             const filtroNivel = document.getElementById('filtroNivel');
             const filtroTipo = document.getElementById('filtroTipo');
             const filtroTexto = document.getElementById('filtroTexto');
@@ -230,7 +228,6 @@
                     mostrarPasos(todosLosPasos);
 
                     filtroEstilo.addEventListener('change', aplicarFiltros);
-                    // Ya no se escucha al filtroOwner
                     filtroNivel.addEventListener('change', aplicarFiltros);
                     filtroTipo.addEventListener('change', aplicarFiltros);
                     filtroTexto.addEventListener('input', aplicarFiltros);
@@ -245,7 +242,8 @@
                 const headers = ['id', 'fecha', 'estilo', 'owner_paso', 'nivel', 'tipo', 'descripcion_larga', 'donde', 'descripcion_corta'];
                 const data = [];
                 for (let i = 1; i < lines.length; i++) {
-                    const values = lines[i].split(',').map(v => v.trim());
+                    // *** CAMBIO CLAVE: Separar por ";" en lugar de "," ***
+                    const values = lines[i].split(';').map(v => v.trim());
                     if (values.length >= headers.length) {
                         let entry = {};
                         headers.forEach((header, index) => {
@@ -258,9 +256,7 @@
             }
 
             function llenarFiltros(data) {
-                // Solo llenamos los filtros existentes
                 const estilos = [...new Set(data.map(p => p.estilo).filter(Boolean))].sort();
-                // owners ya no se necesita para el filtro
                 const niveles = [...new Set(data.map(p => p.nivel).filter(Boolean))].sort();
                 const tipos = [...new Set(data.map(p => p.tipo).filter(Boolean))].sort();
 
@@ -271,14 +267,12 @@
 
             function aplicarFiltros() {
                 const estilo = filtroEstilo.value;
-                // Ya no se usa owner
                 const nivel = filtroNivel.value;
                 const tipo = filtroTipo.value;
                 const texto = filtroTexto.value.toLowerCase().trim();
 
                 const filtrados = todosLosPasos.filter(paso => {
                     if (estilo && paso.estilo !== estilo) return false;
-                    // No se filtra por owner
                     if (nivel && paso.nivel !== nivel) return false;
                     if (tipo && paso.tipo !== tipo) return false;
                     if (texto) {
