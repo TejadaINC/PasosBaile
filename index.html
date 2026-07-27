@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitácora de Pasos de Baile</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 20px auto;
+            padding: 25px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 16px;
+        }
+        h1 {
+            text-align: center;
+            color: #0f172a;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .filters-panel {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+            border: 1px solid #e2e8f0;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 160px;
+        }
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #475569;
+        }
+        select, input {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95em;
+            background-color: white;
+            transition: border-color 0.2s;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #e11d48;
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+        }
+
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+            border-color: #e11d48;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .estilo-badge {
+            background-color: #e11d48;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .fecha-badge {
+            font-size: 0.8em;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .card h2 {
+            margin: 5px 0 10px 0;
+            color: #0f172a;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        .meta-line {
+            font-size: 0.85em;
+            color: #475569;
+            margin-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .meta-line span {
+            background: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .descripcion {
+            flex-grow: 1;
+            color: #334155;
+            font-size: 0.95em;
+        }
+        .donde {
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #0ea5e9;
+            font-weight: 500;
+            font-style: italic;
+        }
+        .donde::before {
+            content: "📍 ";
+            font-style: normal;
+        }
+        details {
+            margin-top: 10px;
+            cursor: pointer;
+            color: #e11d48;
+            font-weight: 500;
+        }
+        summary {
+            list-style: '▼ ';
+        }
+        details[open] summary {
+            list-style: '▲ ';
+        }
+        .descripcion-larga {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8fafc;
+            border-left: 3px solid #e11d48;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .no-results {
+            text-align: center;
+            font-size: 1.2em;
+            color: #94a3b8;
+            grid-column: 1 / -1;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🕺💃 Bitácora de Pasos de Baile</h1>
+        <p class="subtitle">Salsa, Bachata, Lindy Hop, Merengue, Porro y más</p>
+
+        <!-- Filtros Interactivos (AHORA SIN OWNER Y CON "RITMO") -->
+        <div class="filters-panel">
+            <div class="filter-group">
+                <label for="filtroEstilo">🎵 Ritmo</label>
+                <select id="filtroEstilo"><option value="">Todos</option></select>
+            </div>
+            <!-- Filtro de Owner Paso ELIMINADO de la interfaz -->
+            <div class="filter-group">
+                <label for="filtroNivel">📈 Nivel</label>
+                <select id="filtroNivel"><option value="">Todos</option></select>
+            </div>
+            <div class="filter-group">
+                <label for="filtroTipo">🏷️ Tipo</label>
+                <select id="filtroTipo"><option value="">Todos</option></select>
+            </div>
+            <div class="filter-group">
+                <label for="filtroTexto">🔍 Buscar</label>
+                <input type="text" id="filtroTexto" placeholder="Ej: giro, academia, Carla...">
+            </div>
+        </div>
+
+        <div id="grid"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('grid');
+            const filtroEstilo = document.getElementById('filtroEstilo');
+            // Ya no existe filtroOwner en el HTML
+            const filtroNivel = document.getElementById('filtroNivel');
+            const filtroTipo = document.getElementById('filtroTipo');
+            const filtroTexto = document.getElementById('filtroTexto');
+
+            let todosLosPasos = [];
+
+            fetch('pasos_baile.csv')
+                .then(response => {
+                    if (!response.ok) throw new Error('No se pudo cargar pasos_baile.csv. Verifica que esté en la misma carpeta.');
+                    return response.text();
+                })
+                .then(csvText => {
+                    todosLosPasos = parseCSV(csvText);
+                    todosLosPasos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                    
+                    llenarFiltros(todosLosPasos);
+                    mostrarPasos(todosLosPasos);
+
+                    filtroEstilo.addEventListener('change', aplicarFiltros);
+                    // Ya no se escucha al filtroOwner
+                    filtroNivel.addEventListener('change', aplicarFiltros);
+                    filtroTipo.addEventListener('change', aplicarFiltros);
+                    filtroTexto.addEventListener('input', aplicarFiltros);
+                })
+                .catch(error => {
+                    grid.innerHTML = `<p class="no-results" style="color: #ef4444;">❌ Error: ${error.message}</p>`;
+                    console.error(error);
+                });
+
+            function parseCSV(csvText) {
+                const lines = csvText.trim().split('\n');
+                const headers = ['id', 'fecha', 'estilo', 'owner_paso', 'nivel', 'tipo', 'descripcion_larga', 'donde', 'descripcion_corta'];
+                const data = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',').map(v => v.trim());
+                    if (values.length >= headers.length) {
+                        let entry = {};
+                        headers.forEach((header, index) => {
+                            entry[header] = values[index] || '';
+                        });
+                        data.push(entry);
+                    }
+                }
+                return data;
+            }
+
+            function llenarFiltros(data) {
+                // Solo llenamos los filtros existentes
+                const estilos = [...new Set(data.map(p => p.estilo).filter(Boolean))].sort();
+                // owners ya no se necesita para el filtro
+                const niveles = [...new Set(data.map(p => p.nivel).filter(Boolean))].sort();
+                const tipos = [...new Set(data.map(p => p.tipo).filter(Boolean))].sort();
+
+                estilos.forEach(e => filtroEstilo.innerHTML += `<option value="${e}">${e}</option>`);
+                niveles.forEach(n => filtroNivel.innerHTML += `<option value="${n}">${n}</option>`);
+                tipos.forEach(t => filtroTipo.innerHTML += `<option value="${t}">${t}</option>`);
+            }
+
+            function aplicarFiltros() {
+                const estilo = filtroEstilo.value;
+                // Ya no se usa owner
+                const nivel = filtroNivel.value;
+                const tipo = filtroTipo.value;
+                const texto = filtroTexto.value.toLowerCase().trim();
+
+                const filtrados = todosLosPasos.filter(paso => {
+                    if (estilo && paso.estilo !== estilo) return false;
+                    // No se filtra por owner
+                    if (nivel && paso.nivel !== nivel) return false;
+                    if (tipo && paso.tipo !== tipo) return false;
+                    if (texto) {
+                        const hayMatch = 
+                            (paso.owner_paso || '').toLowerCase().includes(texto) ||
+                            (paso.descripcion_corta || '').toLowerCase().includes(texto) ||
+                            (paso.descripcion_larga || '').toLowerCase().includes(texto) ||
+                            (paso.donde || '').toLowerCase().includes(texto) ||
+                            (paso.estilo || '').toLowerCase().includes(texto) ||
+                            (paso.tipo || '').toLowerCase().includes(texto);
+                        if (!hayMatch) return false;
+                    }
+                    return true;
+                });
+
+                mostrarPasos(filtrados);
+            }
+
+            function mostrarPasos(pasos) {
+                grid.innerHTML = '';
+                if (pasos.length === 0) {
+                    grid.innerHTML = '<p class="no-results">✨ Ningún paso coincide con los filtros. ¡Prueba otra combinación!</p>';
+                    return;
+                }
+                pasos.forEach(paso => {
+                    let fechaFormateada = paso.fecha;
+                    try {
+                        const dateObj = new Date(paso.fecha + 'T00:00:00');
+                        fechaFormateada = dateObj.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
+                    } catch(e) {}
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <span class="estilo-badge">${paso.estilo}</span>
+                            <span class="fecha-badge">📅 ${fechaFormateada}</span>
+                        </div>
+                        <h2>${paso.owner_paso || 'Sin dueño'}</h2>
+                        <div class="meta-line">
+                            <span>🏷️ ${paso.tipo}</span>
+                            <span>📊 ${paso.nivel}</span>
+                        </div>
+                        <div class="descripcion">
+                            <p>${paso.descripcion_corta}</p>
+                            ${paso.descripcion_larga ? `
+                            <details>
+                                <summary>Ver descripción completa</summary>
+                                <div class="descripcion-larga">${paso.descripcion_larga}</div>
+                            </details>
+                            ` : ''}
+                        </div>
+                        <div class="donde">${paso.donde}</div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
