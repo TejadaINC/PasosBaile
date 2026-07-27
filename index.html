@@ -32,7 +32,6 @@
             margin-top: 0;
             margin-bottom: 30px;
         }
-
         .filters-panel {
             background: #f1f5f9;
             padding: 20px;
@@ -71,7 +70,6 @@
             border-color: #e11d48;
             box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
         }
-
         #grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -168,13 +166,6 @@
             border-radius: 4px;
             font-size: 0.9em;
         }
-        .no-results {
-            text-align: center;
-            font-size: 1.2em;
-            color: #94a3b8;
-            grid-column: 1 / -1;
-            padding: 40px;
-        }
     </style>
 </head>
 <body>
@@ -182,7 +173,6 @@
         <h1>🕺💃 Bitácora de Pasos de Baile</h1>
         <p class="subtitle">Salsa, Bachata, Lindy Hop, Merengue, Porro y más</p>
 
-        <!-- Filtros Interactivos -->
         <div class="filters-panel">
             <div class="filter-group">
                 <label for="filtroEstilo">🎵 Ritmo</label>
@@ -221,7 +211,19 @@
                     return response.text();
                 })
                 .then(csvText => {
+                    console.log('📄 CSV recibido. Primeros 150 caracteres:');
+                    console.log(csvText.substring(0, 150));
+                    
                     todosLosPasos = parseCSV(csvText);
+                    
+                    console.log(`✅ Total de pasos cargados: ${todosLosPasos.length}`);
+                    if (todosLosPasos.length > 0) {
+                        console.log('📋 Primer paso como ejemplo:', todosLosPasos[0]);
+                        console.log('🏷️ Columnas detectadas:', Object.keys(todosLosPasos[0]));
+                    } else {
+                        console.warn('⚠️ No se cargó ningún paso. Revisa el formato del CSV.');
+                    }
+                    
                     todosLosPasos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
                     
                     llenarFiltros(todosLosPasos);
@@ -233,16 +235,23 @@
                     filtroTexto.addEventListener('input', aplicarFiltros);
                 })
                 .catch(error => {
-                    grid.innerHTML = `<p class="no-results" style="color: #ef4444;">❌ Error: ${error.message}</p>`;
-                    console.error(error);
+                    console.error('❌ Error:', error.message);
+                    grid.innerHTML = `<p style="color: #ef4444; text-align: center; grid-column: 1 / -1; padding: 40px;">❌ Error: ${error.message}</p>`;
                 });
 
             function parseCSV(csvText) {
                 const lines = csvText.trim().split('\n');
-                const headers = ['id', 'fecha', 'estilo', 'owner_paso', 'nivel', 'tipo', 'descripcion_larga', 'donde', 'descripcion_corta'];
+                if (lines.length < 2) {
+                    console.warn('⚠️ El CSV tiene menos de 2 líneas (necesita encabezados + datos).');
+                    return [];
+                }
+                
+                // *** LEER ENCABEZADOS DIRECTAMENTE DEL CSV ***
+                const headers = lines[0].split(';').map(h => h.trim());
+                console.log('🔤 Encabezados encontrados:', headers);
+                
                 const data = [];
                 for (let i = 1; i < lines.length; i++) {
-                    // *** CAMBIO CLAVE: Separar por ";" en lugar de "," ***
                     const values = lines[i].split(';').map(v => v.trim());
                     if (values.length >= headers.length) {
                         let entry = {};
@@ -250,6 +259,8 @@
                             entry[header] = values[index] || '';
                         });
                         data.push(entry);
+                    } else {
+                        console.warn(`⚠️ Línea ${i + 1} ignorada: ${values.length} valores vs ${headers.length} esperados.`);
                     }
                 }
                 return data;
@@ -276,48 +287,57 @@
                     if (nivel && paso.nivel !== nivel) return false;
                     if (tipo && paso.tipo !== tipo) return false;
                     if (texto) {
-                        const hayMatch = 
-                            (paso.owner_paso || '').toLowerCase().includes(texto) ||
-                            (paso.descripcion_corta || '').toLowerCase().includes(texto) ||
-                            (paso.descripcion_larga || '').toLowerCase().includes(texto) ||
-                            (paso.donde || '').toLowerCase().includes(texto) ||
-                            (paso.estilo || '').toLowerCase().includes(texto) ||
-                            (paso.tipo || '').toLowerCase().includes(texto);
+                        const camposABuscar = [
+                            paso.owner_paso,
+                            paso.descripcion_corta,
+                            paso.descripcion_larga,
+                            paso.donde,
+                            paso.estilo,
+                            paso.tipo
+                        ];
+                        const hayMatch = camposABuscar.some(campo => 
+                            (campo || '').toLowerCase().includes(texto)
+                        );
                         if (!hayMatch) return false;
                     }
                     return true;
                 });
 
+                console.log(`🔍 Resultados del filtro: ${filtrados.length} de ${todosLosPasos.length} pasos`);
                 mostrarPasos(filtrados);
             }
 
             function mostrarPasos(pasos) {
                 grid.innerHTML = '';
                 if (pasos.length === 0) {
-                    grid.innerHTML = '<p class="no-results">✨ Ningún paso coincide con los filtros. ¡Prueba otra combinación!</p>';
+                    // Sin mensaje, simplemente no muestra nada
                     return;
                 }
                 pasos.forEach(paso => {
                     let fechaFormateada = paso.fecha;
                     try {
                         const dateObj = new Date(paso.fecha + 'T00:00:00');
-                        fechaFormateada = dateObj.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
-                    } catch(e) {}
+                        if (!isNaN(dateObj.getTime())) {
+                            fechaFormateada = dateObj.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
+                        }
+                    } catch(e) {
+                        console.warn('⚠️ No se pudo formatear fecha:', paso.fecha);
+                    }
 
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.innerHTML = `
                         <div class="card-header">
-                            <span class="estilo-badge">${paso.estilo}</span>
+                            <span class="estilo-badge">${paso.estilo || 'Sin ritmo'}</span>
                             <span class="fecha-badge">📅 ${fechaFormateada}</span>
                         </div>
-                        <h2>${paso.owner_paso || 'Sin dueño'}</h2>
+                        <h2>${paso.owner_paso || 'Sin nombre'}</h2>
                         <div class="meta-line">
-                            <span>🏷️ ${paso.tipo}</span>
-                            <span>📊 ${paso.nivel}</span>
+                            <span>🏷️ ${paso.tipo || 'Sin tipo'}</span>
+                            <span>📊 ${paso.nivel || 'Sin nivel'}</span>
                         </div>
                         <div class="descripcion">
-                            <p>${paso.descripcion_corta}</p>
+                            <p>${paso.descripcion_corta || ''}</p>
                             ${paso.descripcion_larga ? `
                             <details>
                                 <summary>Ver descripción completa</summary>
@@ -325,7 +345,7 @@
                             </details>
                             ` : ''}
                         </div>
-                        <div class="donde">${paso.donde}</div>
+                        <div class="donde">${paso.donde || ''}</div>
                     `;
                     grid.appendChild(card);
                 });
