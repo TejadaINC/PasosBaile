@@ -112,12 +112,6 @@
             color: #64748b;
             font-weight: 500;
         }
-        .card h2 {
-            margin: 5px 0 10px 0;
-            color: #0f172a;
-            font-size: 1.3em;
-            font-weight: 600;
-        }
         .meta-line {
             font-size: 0.85em;
             color: #475569;
@@ -149,7 +143,7 @@
             font-style: normal;
         }
         details {
-            margin-top: 10px;
+            margin-top: 2px;
             cursor: pointer;
             color: #e11d48;
             font-weight: 500;
@@ -351,7 +345,6 @@
                             <span class="estilo-badge">${paso.estilo || 'Sin ritmo'}${paso.codigo ? ' / ' + paso.codigo : ''}</span>
                             <span class="fecha-badge">📅 ${fechaFormateada}</span>
                         </div>
-                        <h2>${paso.owner_paso || 'Sin nombre'}</h2>
                         <div class="meta-line">
                             <span>🏷️ ${paso.tipo || 'Sin tipo'}</span>
                             <span>📊 ${paso.nivel || 'Sin nivel'}</span>
