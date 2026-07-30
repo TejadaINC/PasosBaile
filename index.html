@@ -115,7 +115,7 @@
         .meta-line {
             font-size: 0.85em;
             color: #475569;
-            margin-bottom: 12px;
+            margin-bottom: 4px;
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
@@ -130,6 +130,9 @@
             flex-grow: 1;
             color: #334155;
             font-size: 0.95em;
+        }
+        .descripcion p {
+            margin-bottom: 2px;
         }
         .donde {
             margin-top: 15px;
@@ -149,10 +152,19 @@
             font-weight: 500;
         }
         summary {
-            list-style: '▼ ';
+            list-style: none;
+            padding-left: 24px;
+            position: relative;
         }
-        details[open] summary {
-            list-style: '▲ ';
+        summary::before {
+            content: '▼';
+            position: absolute;
+            left: 0;
+            color: #e11d48;
+            font-size: 0.8em;
+        }
+        details[open] summary::before {
+            content: '▲';
         }
         .descripcion-larga {
             margin-top: 10px;
@@ -167,7 +179,7 @@
 <body>
     <div class="container">
         <h1>🕺💃 Bitácora de Pasos de Baile</h1>
-        <p class="subtitle">Salsa, Bachata, Lindy Hop, Porro y más</p>
+        <p class="subtitle">Salsa, Bachata, Lindy Hop, Merengue, Porro y más</p>
 
         <div class="filters-panel">
             <div class="filter-group">
