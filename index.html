@@ -32,6 +32,7 @@
             margin-top: 0;
             margin-bottom: 30px;
         }
+
         .filters-panel {
             background: #f1f5f9;
             padding: 20px;
@@ -70,6 +71,7 @@
             border-color: #e11d48;
             box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
         }
+
         #grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -84,17 +86,35 @@
             transition: all 0.2s ease-in-out;
             display: flex;
             flex-direction: column;
+            position: relative; /* Para posicionar el código absolutamente */
         }
         .card:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 24px rgba(0,0,0,0.1);
             border-color: #e11d48;
         }
+        /* Nuevo: Código en esquina superior izquierda */
+        .codigo-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(15, 23, 42, 0.85);
+            color: #f8fafc;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 700;
+            font-size: 0.9em;
+            padding: 3px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            z-index: 2;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            margin-top: 5px; /* dejar espacio para el código */
         }
         .estilo-badge {
             background-color: #e11d48;
@@ -196,6 +216,30 @@
     </div>
 
     <script>
+        // 🔧 Función para reparar tildes mal codificadas (parche UTF-8)
+        function fixEncoding(str) {
+            if (!str) return str;
+            return str
+                .replace(/Ã¡/g, 'á')
+                .replace(/Ã©/g, 'é')
+                .replace(/Ã­/g, 'í')
+                .replace(/Ã³/g, 'ó')
+                .replace(/Ãº/g, 'ú')
+                .replace(/Ã±/g, 'ñ')
+                .replace(/Ã/g, 'Á')
+                .replace(/Ã‰/g, 'É')
+                .replace(/Ã/g, 'Í')
+                .replace(/Ã“/g, 'Ó')
+                .replace(/Ãš/g, 'Ú')
+                .replace(/Ã‘/g, 'Ñ')
+                .replace(/Â¡/g, '¡')
+                .replace(/Â¿/g, '¿')
+                .replace(/â€œ/g, '"')
+                .replace(/â€/g, '"')
+                .replace(/â€˜/g, "'")
+                .replace(/â€™/g, "'");
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('grid');
             const filtroEstilo = document.getElementById('filtroEstilo');
@@ -207,7 +251,7 @@
 
             fetch('pasos_baile.csv')
                 .then(response => {
-                    if (!response.ok) throw new Error('No se pudo cargar pasos_baile.csv. Verifica que esté en la misma carpeta.');
+                    if (!response.ok) throw new Error('No se pudo cargar pasos_baile.csv.');
                     return response.text();
                 })
                 .then(csvText => {
@@ -218,10 +262,7 @@
                     
                     console.log(`✅ Total de pasos cargados: ${todosLosPasos.length}`);
                     if (todosLosPasos.length > 0) {
-                        console.log('📋 Primer paso como ejemplo:', todosLosPasos[0]);
-                        console.log('🏷️ Columnas detectadas:', Object.keys(todosLosPasos[0]));
-                    } else {
-                        console.warn('⚠️ No se cargó ningún paso. Revisa el formato del CSV.');
+                        console.log('📋 Primer paso:', todosLosPasos[0]);
                     }
                     
                     todosLosPasos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
@@ -242,13 +283,13 @@
             function parseCSV(csvText) {
                 const lines = csvText.trim().split('\n');
                 if (lines.length < 2) {
-                    console.warn('⚠️ El CSV tiene menos de 2 líneas (necesita encabezados + datos).');
+                    console.warn('⚠️ El CSV tiene menos de 2 líneas.');
                     return [];
                 }
                 
-                // *** LEER ENCABEZADOS DIRECTAMENTE DEL CSV ***
+                // Leemos encabezados directamente del CSV, sin lista fija
                 const headers = lines[0].split(';').map(h => h.trim());
-                console.log('🔤 Encabezados encontrados:', headers);
+                console.log('🔤 Encabezados:', headers);
                 
                 const data = [];
                 for (let i = 1; i < lines.length; i++) {
@@ -256,20 +297,23 @@
                     if (values.length >= headers.length) {
                         let entry = {};
                         headers.forEach((header, index) => {
-                            entry[header] = values[index] || '';
+                            entry[header] = fixEncoding(values[index] || '');
                         });
                         data.push(entry);
-                    } else {
-                        console.warn(`⚠️ Línea ${i + 1} ignorada: ${values.length} valores vs ${headers.length} esperados.`);
                     }
                 }
                 return data;
             }
 
             function llenarFiltros(data) {
+                // Filtros existentes (sin cambios)
                 const estilos = [...new Set(data.map(p => p.estilo).filter(Boolean))].sort();
                 const niveles = [...new Set(data.map(p => p.nivel).filter(Boolean))].sort();
                 const tipos = [...new Set(data.map(p => p.tipo).filter(Boolean))].sort();
+
+                filtroEstilo.innerHTML = '<option value="">Todos</option>';
+                filtroNivel.innerHTML = '<option value="">Todos</option>';
+                filtroTipo.innerHTML = '<option value="">Todos</option>';
 
                 estilos.forEach(e => filtroEstilo.innerHTML += `<option value="${e}">${e}</option>`);
                 niveles.forEach(n => filtroNivel.innerHTML += `<option value="${n}">${n}</option>`);
@@ -293,7 +337,8 @@
                             paso.descripcion_larga,
                             paso.donde,
                             paso.estilo,
-                            paso.tipo
+                            paso.tipo,
+                            paso.codigo  // incluir código en búsqueda
                         ];
                         const hayMatch = camposABuscar.some(campo => 
                             (campo || '').toLowerCase().includes(texto)
@@ -303,16 +348,13 @@
                     return true;
                 });
 
-                console.log(`🔍 Resultados del filtro: ${filtrados.length} de ${todosLosPasos.length} pasos`);
                 mostrarPasos(filtrados);
             }
 
             function mostrarPasos(pasos) {
                 grid.innerHTML = '';
-                if (pasos.length === 0) {
-                    // Sin mensaje, simplemente no muestra nada
-                    return;
-                }
+                if (pasos.length === 0) return;
+                
                 pasos.forEach(paso => {
                     let fechaFormateada = paso.fecha;
                     try {
@@ -320,13 +362,17 @@
                         if (!isNaN(dateObj.getTime())) {
                             fechaFormateada = dateObj.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
                         }
-                    } catch(e) {
-                        console.warn('⚠️ No se pudo formatear fecha:', paso.fecha);
-                    }
+                    } catch(e) {}
 
                     const card = document.createElement('div');
                     card.className = 'card';
+                    
+                    // Construir el HTML de la tarjeta
+                    // Incluimos el código si existe
+                    const codigoHTML = paso.codigo ? `<div class="codigo-badge">${paso.codigo}</div>` : '';
+                    
                     card.innerHTML = `
+                        ${codigoHTML}
                         <div class="card-header">
                             <span class="estilo-badge">${paso.estilo || 'Sin ritmo'}</span>
                             <span class="fecha-badge">📅 ${fechaFormateada}</span>
