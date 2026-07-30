@@ -240,7 +240,6 @@
                     todosLosPasos = parseCSV(csvText);
                     console.log(`✅ Total de pasos cargados: ${todosLosPasos.length}`);
                     
-                    // *** NUEVO ORDEN: Ritmo (alfabético) → Código (ascendente) ***
                     todosLosPasos.sort((a, b) => {
                         const ritmoA = (a.estilo || '').toLowerCase();
                         const ritmoB = (b.estilo || '').toLowerCase();
@@ -362,7 +361,7 @@
                             ${paso.descripcion_larga ? `
                             <details>
                                 <summary>Ver descripción completa</summary>
-                                <div class="descripcion-larga">${paso.descripcion_larga}</div>
+                                <div class="descripcion-larga">${(paso.descripcion_larga || '').replace(/%/g, '<br>')}</div>
                             </details>
                             ` : ''}
                         </div>
