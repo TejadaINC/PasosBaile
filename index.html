@@ -86,35 +86,17 @@
             transition: all 0.2s ease-in-out;
             display: flex;
             flex-direction: column;
-            position: relative; /* Para posicionar el código absolutamente */
         }
         .card:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 24px rgba(0,0,0,0.1);
             border-color: #e11d48;
         }
-        /* Nuevo: Código en esquina superior izquierda */
-        .codigo-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(15, 23, 42, 0.85);
-            color: #f8fafc;
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: 700;
-            font-size: 0.9em;
-            padding: 3px 10px;
-            border-radius: 6px;
-            letter-spacing: 0.5px;
-            z-index: 2;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-        }
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
-            margin-top: 5px; /* dejar espacio para el código */
         }
         .estilo-badge {
             background-color: #e11d48;
@@ -216,7 +198,6 @@
     </div>
 
     <script>
-        // 🔧 Función para reparar tildes mal codificadas (parche UTF-8)
         function fixEncoding(str) {
             if (!str) return str;
             return str
@@ -255,16 +236,9 @@
                     return response.text();
                 })
                 .then(csvText => {
-                    console.log('📄 CSV recibido. Primeros 150 caracteres:');
-                    console.log(csvText.substring(0, 150));
-                    
+                    console.log('📄 CSV recibido.');
                     todosLosPasos = parseCSV(csvText);
-                    
                     console.log(`✅ Total de pasos cargados: ${todosLosPasos.length}`);
-                    if (todosLosPasos.length > 0) {
-                        console.log('📋 Primer paso:', todosLosPasos[0]);
-                    }
-                    
                     todosLosPasos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
                     
                     llenarFiltros(todosLosPasos);
@@ -282,15 +256,9 @@
 
             function parseCSV(csvText) {
                 const lines = csvText.trim().split('\n');
-                if (lines.length < 2) {
-                    console.warn('⚠️ El CSV tiene menos de 2 líneas.');
-                    return [];
-                }
+                if (lines.length < 2) return [];
                 
-                // Leemos encabezados directamente del CSV, sin lista fija
                 const headers = lines[0].split(';').map(h => h.trim());
-                console.log('🔤 Encabezados:', headers);
-                
                 const data = [];
                 for (let i = 1; i < lines.length; i++) {
                     const values = lines[i].split(';').map(v => v.trim());
@@ -306,7 +274,6 @@
             }
 
             function llenarFiltros(data) {
-                // Filtros existentes (sin cambios)
                 const estilos = [...new Set(data.map(p => p.estilo).filter(Boolean))].sort();
                 const niveles = [...new Set(data.map(p => p.nivel).filter(Boolean))].sort();
                 const tipos = [...new Set(data.map(p => p.tipo).filter(Boolean))].sort();
@@ -338,7 +305,7 @@
                             paso.donde,
                             paso.estilo,
                             paso.tipo,
-                            paso.codigo  // incluir código en búsqueda
+                            paso.codigo
                         ];
                         const hayMatch = camposABuscar.some(campo => 
                             (campo || '').toLowerCase().includes(texto)
@@ -366,15 +333,9 @@
 
                     const card = document.createElement('div');
                     card.className = 'card';
-                    
-                    // Construir el HTML de la tarjeta
-                    // Incluimos el código si existe
-                    const codigoHTML = paso.codigo ? `<div class="codigo-badge">${paso.codigo}</div>` : '';
-                    
                     card.innerHTML = `
-                        ${codigoHTML}
                         <div class="card-header">
-                            <span class="estilo-badge">${paso.estilo || 'Sin ritmo'}</span>
+                            <span class="estilo-badge">${paso.estilo || 'Sin ritmo'}${paso.codigo ? ' / ' + paso.codigo : ''}</span>
                             <span class="fecha-badge">📅 ${fechaFormateada}</span>
                         </div>
                         <h2>${paso.owner_paso || 'Sin nombre'}</h2>
