@@ -239,7 +239,21 @@
                     console.log('📄 CSV recibido.');
                     todosLosPasos = parseCSV(csvText);
                     console.log(`✅ Total de pasos cargados: ${todosLosPasos.length}`);
-                    todosLosPasos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                    
+                    // *** NUEVO ORDEN: Ritmo (alfabético) → Código (ascendente) ***
+                    todosLosPasos.sort((a, b) => {
+                        const ritmoA = (a.estilo || '').toLowerCase();
+                        const ritmoB = (b.estilo || '').toLowerCase();
+                        if (ritmoA < ritmoB) return -1;
+                        if (ritmoA > ritmoB) return 1;
+                        
+                        const codigoA = a.codigo || 'ZZZ';
+                        const codigoB = b.codigo || 'ZZZ';
+                        if (codigoA < codigoB) return -1;
+                        if (codigoA > codigoB) return 1;
+                        
+                        return 0;
+                    });
                     
                     llenarFiltros(todosLosPasos);
                     mostrarPasos(todosLosPasos);
