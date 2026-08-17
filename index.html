@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>    
+<head>
     <meta charset="UTF-8">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='70'>💃</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💃</text></svg>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitácora de Pasos de Baile</title>
     <style>
@@ -71,6 +71,27 @@
             outline: none;
             border-color: #e11d48;
             box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+        }
+        .convenciones-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            background-color: #0f172a;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.2s;
+            align-self: flex-end;
+            white-space: nowrap;
+        }
+        .convenciones-link:hover {
+            background-color: #1e293b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            text-decoration: none;
         }
 
         #grid {
@@ -175,7 +196,6 @@
             border-radius: 4px;
             font-size: 0.9em;
         }
-        /* Estilo para el enlace de video */
         .video-link {
             display: inline-flex;
             align-items: center;
@@ -224,6 +244,7 @@
                 <label for="filtroTexto">🔍 Buscar</label>
                 <input type="text" id="filtroTexto" placeholder="Ej: giro, academia, Carla...">
             </div>
+            <a href="convenciones.html" class="convenciones-link" title="Ver convenciones">📋 Convenciones</a>
         </div>
 
         <div id="grid"></div>
@@ -253,40 +274,21 @@
                 .replace(/â€™/g, "'");
         }
 
-        // Función para detectar si es móvil
         function esDispositivoMovil() {
             return /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
 
-        // Función para generar el enlace correcto según dispositivo
         function generarEnlaceVideo(url) {
             if (!url) return null;
-            
             url = url.trim();
-            
-            // Si es móvil y es enlace de YouTube, intentar abrir en la app
             if (esDispositivoMovil()) {
-                // Convertir enlaces de YouTube a formato app
-                // youtube.com/watch?v=XXXX -> vnd.youtube://XXXX
-                // youtu.be/XXXX -> vnd.youtube://XXXX
                 let videoId = null;
-                
                 const matchWatch = url.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/);
                 const matchShort = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
-                
-                if (matchWatch) {
-                    videoId = matchWatch[1];
-                } else if (matchShort) {
-                    videoId = matchShort[1];
-                }
-                
-                if (videoId) {
-                    // Intentamos abrir en la app de YouTube
-                    return `vnd.youtube://${videoId}`;
-                }
+                if (matchWatch) videoId = matchWatch[1];
+                else if (matchShort) videoId = matchShort[1];
+                if (videoId) return `vnd.youtube://${videoId}`;
             }
-            
-            // En PC o si no es YouTube, abrir en pestaña nueva
             return url;
         }
 
@@ -413,7 +415,6 @@
                         }
                     } catch(e) {}
 
-                    // Determinar el enlace del video
                     const urlVideo = paso.video || paso.Video || '';
                     const enlaceVideo = urlVideo ? generarEnlaceVideo(urlVideo) : null;
                     
