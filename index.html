@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💃</text></svg>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>  <h1>🕺💃 Bitácora de Baile de Wilmar</h1>   </title>
+    <title>Bitácora de Baile de Wilmar</title>
     <style>
         :root {
             --borgoña: #800020;
@@ -267,7 +268,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🕺💃 Bitácora de Pasos de Baile</h1>
+        <h1>🕺💃 Bitácora de Baile de Wilmar</h1>
         <p class="subtitle">Salsa, Bachata, Lindy Hop, Merengue, Porro y más</p>
 
         <div class="abreviaturas-wrapper">
@@ -409,7 +410,6 @@
                     </label>
                 `).join('');
 
-                // Agregar opción especial "con video" al final de los tipos
                 const tiposHTML = tipos.map(t => `
                     <label class="checkbox-item">
                         <input type="checkbox" value="${t}"> ${t}
@@ -434,7 +434,6 @@
                 const filtrados = todosLosPasos.filter(paso => {
                     if (estilosSeleccionados.length > 0 && !estilosSeleccionados.includes(paso.estilo)) return false;
 
-                    // Lógica de tipo (incluye con video)
                     if (tiposSeleccionados.length > 0 || conVideoChecked) {
                         const matchesTipo = tiposSeleccionados.includes(paso.tipo);
                         const matchesVideo = conVideoChecked && (paso.video || paso.Video || paso.enlace_video);
