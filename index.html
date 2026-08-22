@@ -47,14 +47,14 @@
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            align-items: flex-end;
+            align-items: flex-start;
             border: 1px solid #e2e8f0;
         }
         .filter-group {
             display: flex;
             flex-direction: column;
             flex: 1;
-            min-width: 160px;
+            min-width: 200px;
         }
         .filter-group label {
             font-weight: 600;
@@ -64,7 +64,7 @@
             letter-spacing: 0.5px;
             color: #475569;
         }
-        select, input {
+        input[type="text"] {
             padding: 10px;
             border: 1px solid #cbd5e1;
             border-radius: 8px;
@@ -72,13 +72,36 @@
             background-color: white;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-        select:focus, input:focus {
+        input[type="text"]:focus {
             outline: none;
             border-color: var(--borgoña);
             box-shadow: 0 0 0 3px var(--borgoña-light);
         }
 
-        /* Enlace a Abreviaturas, fuera del panel, a la derecha, estilo borgoña */
+        /* Checkboxes */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            padding: 5px 0;
+        }
+        .checkbox-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9em;
+            color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-item input[type="checkbox"] {
+            accent-color: var(--borgoña);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        /* Enlace a Abreviaturas */
         .abreviaturas-wrapper {
             display: flex;
             justify-content: flex-end;
@@ -249,24 +272,18 @@
         <h1>🕺💃 Bitácora de Pasos de Baile</h1>
         <p class="subtitle">Salsa, Bachata, Lindy Hop, Merengue, Porro y más</p>
 
-        <!-- Enlace a Abreviaturas, a la derecha -->
         <div class="abreviaturas-wrapper">
             <a href="convenciones.html" class="abreviaturas-link" title="Ver abreviaturas">📋 Abreviaturas</a>
         </div>
 
-        <!-- Panel de filtros -->
         <div class="filters-panel">
             <div class="filter-group">
-                <label for="filtroEstilo">🎵 Ritmo</label>
-                <select id="filtroEstilo"><option value="">Todos</option></select>
+                <label>🎵 Ritmo</label>
+                <div id="filtroEstilo" class="checkbox-group"></div>
             </div>
             <div class="filter-group">
-                <label for="filtroNivel">📈 Nivel</label>
-                <select id="filtroNivel"><option value="">Todos</option></select>
-            </div>
-            <div class="filter-group">
-                <label for="filtroTipo">🏷️ Tipo</label>
-                <select id="filtroTipo"><option value="">Todos</option></select>
+                <label>🏷️ Tipo</label>
+                <div id="filtroTipo" class="checkbox-group"></div>
             </div>
             <div class="filter-group">
                 <label for="filtroTexto">🔍 Buscar</label>
@@ -274,10 +291,7 @@
             </div>
         </div>
 
-        <!-- Contador de resultados -->
         <div id="resultado-conteo"></div>
-
-        <!-- Cuadrícula de tarjetas -->
         <div id="grid"></div>
     </div>
 
@@ -327,7 +341,6 @@
             const grid = document.getElementById('grid');
             const resultadoConteo = document.getElementById('resultado-conteo');
             const filtroEstilo = document.getElementById('filtroEstilo');
-            const filtroNivel = document.getElementById('filtroNivel');
             const filtroTipo = document.getElementById('filtroTipo');
             const filtroTexto = document.getElementById('filtroTexto');
 
@@ -360,16 +373,7 @@
                     llenarFiltros(todosLosPasos);
                     mostrarPasos(todosLosPasos);
 
-                    filtroEstilo.addEventListener('change', () => {
-                        // Si selecciona "Todos", resetear los otros filtros
-                        if (filtroEstilo.value === '') {
-                            filtroNivel.value = '';
-                            filtroTipo.value = '';
-                            filtroTexto.value = '';
-                        }
-                        aplicarFiltros();
-                    });
-                    filtroNivel.addEventListener('change', aplicarFiltros);
+                    filtroEstilo.addEventListener('change', aplicarFiltros);
                     filtroTipo.addEventListener('change', aplicarFiltros);
                     filtroTexto.addEventListener('input', aplicarFiltros);
                 })
@@ -399,28 +403,29 @@
 
             function llenarFiltros(data) {
                 const estilos = [...new Set(data.map(p => p.estilo).filter(Boolean))].sort();
-                const niveles = [...new Set(data.map(p => p.nivel).filter(Boolean))].sort();
                 const tipos = [...new Set(data.map(p => p.tipo).filter(Boolean))].sort();
 
-                filtroEstilo.innerHTML = '<option value="">Todos</option>';
-                filtroNivel.innerHTML = '<option value="">Todos</option>';
-                filtroTipo.innerHTML = '<option value="">Todos</option>';
+                filtroEstilo.innerHTML = estilos.map(e => `
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="${e}"> ${e}
+                    </label>
+                `).join('');
 
-                estilos.forEach(e => filtroEstilo.innerHTML += `<option value="${e}">${e}</option>`);
-                niveles.forEach(n => filtroNivel.innerHTML += `<option value="${n}">${n}</option>`);
-                tipos.forEach(t => filtroTipo.innerHTML += `<option value="${t}">${t}</option>`);
+                filtroTipo.innerHTML = tipos.map(t => `
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="${t}"> ${t}
+                    </label>
+                `).join('');
             }
 
             function aplicarFiltros() {
-                const estilo = filtroEstilo.value;
-                const nivel = filtroNivel.value;
-                const tipo = filtroTipo.value;
+                const estilosSeleccionados = [...filtroEstilo.querySelectorAll('input[type="checkbox"]:checked')].map(cb => cb.value);
+                const tiposSeleccionados = [...filtroTipo.querySelectorAll('input[type="checkbox"]:checked')].map(cb => cb.value);
                 const texto = filtroTexto.value.toLowerCase().trim();
 
                 const filtrados = todosLosPasos.filter(paso => {
-                    if (estilo && paso.estilo !== estilo) return false;
-                    if (nivel && paso.nivel !== nivel) return false;
-                    if (tipo && paso.tipo !== tipo) return false;
+                    if (estilosSeleccionados.length > 0 && !estilosSeleccionados.includes(paso.estilo)) return false;
+                    if (tiposSeleccionados.length > 0 && !tiposSeleccionados.includes(paso.tipo)) return false;
                     if (texto) {
                         const camposABuscar = [
                             paso.owner_paso,
@@ -476,7 +481,6 @@
                         </div>
                         <div class="meta-line">
                             <span>🏷️ ${paso.tipo || 'Sin tipo'}</span>
-                            <span>📊 ${paso.nivel || 'Sin nivel'}</span>
                         </div>
                         <div class="descripcion">
                             <p>${paso.descripcion_corta || ''}</p>
