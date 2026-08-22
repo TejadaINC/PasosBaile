@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💃</text></svg>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bitácora de Baile de Wilmar</title>
+    <title>DanceNow</title>
     <style>
         :root {
             --borgoña: #800020;
@@ -52,20 +52,35 @@
             border-radius: 16px;
             transition: background-color 0.3s, box-shadow 0.3s;
         }
-        h1 {
+
+        /* ========== TITULO EN 3 NIVELES ========== */
+        .header-titulo {
             text-align: center;
-            color: var(--text);
-            margin-bottom: 5px;
+            margin-bottom: 30px;
+        }
+        .titulo-nivel-1 {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            color: var(--text);
+            margin: 0 0 5px 0;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
-        .subtitle {
-            text-align: center;
+        .titulo-nivel-2 {
             color: var(--text-muted);
-            margin-top: 0;
-            margin-bottom: 30px;
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+            font-weight: 400;
+        }
+        .titulo-nivel-3 {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 300;
+            opacity: 0.85;
         }
 
         .filters-panel {
@@ -321,17 +336,18 @@
     </style>
 </head>
 <body>
-    <!-- Botón de modo oscuro -->
     <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
 
     <div class="container">
-        <h1>
-            <img src="logo.jpg" 
-                 alt="Logo" 
-                 style="height: var(--logo-height);">
-            <span id="site-title">Bitácora de Baile de Wilmar</span>
-        </h1>
-        <p class="subtitle">Salsa, Bachata, Lindy Hop, Merengue, Porro y más</p>
+        <!-- TITULO EN 3 NIVELES -->
+        <div class="header-titulo">
+            <h1 class="titulo-nivel-1">
+                <img src="logo.jpg" alt="Logo" style="height: var(--logo-height);">
+                <span id="titulo-1">DanceNow</span>
+            </h1>
+            <p class="titulo-nivel-2" id="titulo-2">Bitácora de pasos de baile.</p>
+            <p class="titulo-nivel-3" id="titulo-3">Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...</p>
+        </div>
 
         <div class="abreviaturas-wrapper">
             <a href="convenciones.html" class="abreviaturas-link" title="Ver abreviaturas">📋 Abreviaturas</a>
@@ -357,16 +373,20 @@
     </div>
 
     <script>
-        // ================== TÍTULO CENTRALIZADO ==================
-        const SITE_TITLE = 'DanceNow / Bitacora de pasos de baile';
+        // ================== TÍTULOS CONFIGURABLES ==================
+        const SITE_TITLE = 'DanceNow';
+        const SITE_SUBTITLE = 'Bitácora de pasos de baile.';
+        const SITE_DESCRIPTION = 'Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...';
+
         document.title = SITE_TITLE;
-        document.getElementById('site-title').textContent = SITE_TITLE;
+        document.getElementById('titulo-1').textContent = SITE_TITLE;
+        document.getElementById('titulo-2').textContent = SITE_SUBTITLE;
+        document.getElementById('titulo-3').textContent = SITE_DESCRIPTION;
 
         // ================== MODO OSCURO ==================
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
 
-        // Detectar tema guardado o preferencia del sistema
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
             body.setAttribute('data-theme', savedTheme);
@@ -374,7 +394,6 @@
             body.setAttribute('data-theme', 'dark');
         }
 
-        // Actualizar icono
         function updateThemeIcon() {
             const isDark = body.getAttribute('data-theme') === 'dark';
             themeToggle.textContent = isDark ? '☀️' : '🌙';
