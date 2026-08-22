@@ -10,27 +10,51 @@
             --borgoña: #800020;
             --borgoña-hover: #5a0015;
             --borgoña-light: rgba(128, 0, 32, 0.1);
-            --logo-height: 80px; /* 👈 Cambia este valor para ajustar el tamaño del logo */
+            --logo-height: 50px;
+
+            /* Paleta modo claro */
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --text-light: #475569;
+            --text-muted: #64748b;
+            --panel-bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --text: #f1f5f9;
+            --text-light: #cbd5e1;
+            --text-muted: #94a3b8;
+            --panel-bg: #1e293b;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #f8fafc;
-            color: #1e293b;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.3s, color 0.3s;
         }
         .container {
             max-width: 1300px;
             margin: 20px auto;
             padding: 25px;
-            background: white;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
             border-radius: 16px;
+            transition: background-color 0.3s, box-shadow 0.3s;
         }
         h1 {
             text-align: center;
-            color: #0f172a;
+            color: var(--text);
             margin-bottom: 5px;
             display: flex;
             align-items: center;
@@ -39,13 +63,13 @@
         }
         .subtitle {
             text-align: center;
-            color: #64748b;
+            color: var(--text-muted);
             margin-top: 0;
             margin-bottom: 30px;
         }
 
         .filters-panel {
-            background: #f1f5f9;
+            background: var(--panel-bg);
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 30px;
@@ -53,7 +77,8 @@
             flex-wrap: wrap;
             gap: 15px;
             align-items: flex-start;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
+            transition: background-color 0.3s, border-color 0.3s;
         }
         .filter-group {
             display: flex;
@@ -67,14 +92,15 @@
             font-size: 0.85em;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #475569;
+            color: var(--text-light);
         }
         input[type="text"] {
             padding: 10px;
-            border: 1px solid #cbd5e1;
+            border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 0.95em;
-            background-color: white;
+            background-color: var(--card-bg);
+            color: var(--text);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
         input[type="text"]:focus {
@@ -94,7 +120,7 @@
             align-items: center;
             gap: 5px;
             font-size: 0.9em;
-            color: #334155;
+            color: var(--text-light);
             cursor: pointer;
             user-select: none;
         }
@@ -131,7 +157,7 @@
         #resultado-conteo {
             text-align: center;
             font-size: 1rem;
-            color: #475569;
+            color: var(--text-light);
             margin-bottom: 15px;
             font-weight: 500;
         }
@@ -142,10 +168,10 @@
             gap: 20px;
         }
         .card {
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 20px;
-            background: white;
+            background: var(--card-bg);
             box-shadow: 0 1px 3px rgba(0,0,0,0.04);
             transition: all 0.2s ease-in-out;
             display: flex;
@@ -173,26 +199,26 @@
         }
         .fecha-badge {
             font-size: 0.8em;
-            color: #64748b;
+            color: var(--text-muted);
             font-weight: 500;
         }
         .meta-line {
             font-size: 0.85em;
-            color: #475569;
+            color: var(--text-light);
             margin-bottom: 4px;
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
         .meta-line span {
-            background: #f1f5f9;
+            background: var(--panel-bg);
             padding: 3px 8px;
             border-radius: 6px;
             font-weight: 500;
         }
         .descripcion {
             flex-grow: 1;
-            color: #334155;
+            color: var(--text);
             font-size: 0.95em;
         }
         .descripcion p {
@@ -233,7 +259,7 @@
         .descripcion-larga {
             margin-top: 10px;
             padding: 10px;
-            background: #f8fafc;
+            background: var(--panel-bg);
             border-left: 3px solid var(--borgoña);
             border-radius: 4px;
             font-size: 0.9em;
@@ -268,15 +294,42 @@
             padding: 40px;
             font-size: 1.1em;
         }
+
+        /* Botón de modo oscuro */
+        .theme-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background-color: var(--card-bg);
+            color: var(--text);
+            font-size: 1.3em;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
+    <!-- Botón de modo oscuro -->
+    <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+
     <div class="container">
         <h1>
             <img src="logo.jpg" 
-                 alt="Logo Bitácora de Baile de Wilmar" 
+                 alt="Logo" 
                  style="height: var(--logo-height);">
-            Bitácora de Baile de Wilmar
+            <span id="site-title">Bitácora de Baile de Wilmar</span>
         </h1>
         <p class="subtitle">Salsa, Bachata, Lindy Hop, Merengue, Porro y más</p>
 
@@ -304,6 +357,39 @@
     </div>
 
     <script>
+        // ================== TÍTULO CENTRALIZADO ==================
+        const SITE_TITLE = 'Bitácora de Baile de Wilmar';
+        document.title = SITE_TITLE;
+        document.getElementById('site-title').textContent = SITE_TITLE;
+
+        // ================== MODO OSCURO ==================
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Detectar tema guardado o preferencia del sistema
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            body.setAttribute('data-theme', savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.setAttribute('data-theme', 'dark');
+        }
+
+        // Actualizar icono
+        function updateThemeIcon() {
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+        }
+        updateThemeIcon();
+
+        themeToggle.addEventListener('click', () => {
+            const current = body.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon();
+        });
+
+        // ================== FUNCIONES AUXILIARES ==================
         function fixEncoding(str) {
             if (!str) return str;
             return str
@@ -345,6 +431,7 @@
             return url;
         }
 
+        // ================== CARGA DE DATOS ==================
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('grid');
             const resultadoConteo = document.getElementById('resultado-conteo');
@@ -360,24 +447,18 @@
                     return response.text();
                 })
                 .then(csvText => {
-                    console.log('📄 CSV recibido.');
                     todosLosPasos = parseCSV(csvText);
-                    console.log(`✅ Total de pasos cargados: ${todosLosPasos.length}`);
-                    
                     todosLosPasos.sort((a, b) => {
                         const ritmoA = (a.estilo || '').toLowerCase();
                         const ritmoB = (b.estilo || '').toLowerCase();
                         if (ritmoA < ritmoB) return -1;
                         if (ritmoA > ritmoB) return 1;
-                        
                         const codigoA = a.codigo || 'ZZZ';
                         const codigoB = b.codigo || 'ZZZ';
                         if (codigoA < codigoB) return -1;
                         if (codigoA > codigoB) return 1;
-                        
                         return 0;
                     });
-                    
                     llenarFiltros(todosLosPasos);
                     mostrarPasos(todosLosPasos);
 
@@ -386,14 +467,12 @@
                     filtroTexto.addEventListener('input', aplicarFiltros);
                 })
                 .catch(error => {
-                    console.error('❌ Error:', error.message);
                     grid.innerHTML = `<p class="error-message">❌ Error: ${error.message}</p>`;
                 });
 
             function parseCSV(csvText) {
                 const lines = csvText.trim().split('\n');
                 if (lines.length < 2) return [];
-                
                 const headers = lines[0].split(';').map(h => h.trim());
                 const data = [];
                 for (let i = 1; i < lines.length; i++) {
@@ -442,13 +521,11 @@
 
                 const filtrados = todosLosPasos.filter(paso => {
                     if (estilosSeleccionados.length > 0 && !estilosSeleccionados.includes(paso.estilo)) return false;
-
                     if (tiposSeleccionados.length > 0 || conVideoChecked) {
                         const matchesTipo = tiposSeleccionados.includes(paso.tipo);
                         const matchesVideo = conVideoChecked && (paso.video || paso.Video || paso.enlace_video);
                         if (!(matchesTipo || matchesVideo)) return false;
                     }
-
                     if (texto) {
                         const camposABuscar = [
                             paso.owner_paso,
@@ -459,9 +536,7 @@
                             paso.tipo,
                             paso.codigo
                         ];
-                        const hayMatch = camposABuscar.some(campo => 
-                            (campo || '').toLowerCase().includes(texto)
-                        );
+                        const hayMatch = camposABuscar.some(campo => (campo || '').toLowerCase().includes(texto));
                         if (!hayMatch) return false;
                     }
                     return true;
@@ -472,7 +547,6 @@
 
             function mostrarPasos(pasos) {
                 grid.innerHTML = '';
-                
                 if (pasos.length === 0) {
                     resultadoConteo.textContent = '0 resultados';
                 } else if (pasos.length === 1) {
@@ -482,7 +556,7 @@
                 }
 
                 if (pasos.length === 0) return;
-                
+
                 pasos.forEach(paso => {
                     let fechaFormateada = paso.fecha;
                     try {
@@ -494,7 +568,7 @@
 
                     const urlVideo = paso.video || paso.Video || '';
                     const enlaceVideo = urlVideo ? generarEnlaceVideo(urlVideo) : null;
-                    
+
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.innerHTML = `
