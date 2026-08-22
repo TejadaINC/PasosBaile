@@ -10,6 +10,7 @@
             --borgoña: #800020;
             --borgoña-hover: #5a0015;
             --borgoña-light: rgba(128, 0, 32, 0.1);
+            --logo-height: 50px; /* 👈 Cambia este valor para ajustar el tamaño del logo */
         }
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -31,6 +32,10 @@
             text-align: center;
             color: #0f172a;
             margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         .subtitle {
             text-align: center;
@@ -270,7 +275,7 @@
         <h1>
             <img src="logo.jpg" 
                  alt="Logo Bitácora de Baile de Wilmar" 
-                 style="vertical-align: middle; margin-right: 10px;">
+                 style="height: var(--logo-height);">
             Bitácora de Baile de Wilmar
         </h1>
         <p class="subtitle">Salsa, Bachata, Lindy Hop, Merengue, Porro y más</p>
