@@ -2,10 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💃</text></svg>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abreviaturas - Bitácora de Pasos de Baile</title>
+    <title>Bitácora de Pasos de Baile</title>
     <style>
+        :root {
+            --borgoña: #800020;
+            --borgoña-hover: #5a0015;
+            --borgoña-light: rgba(128, 0, 32, 0.1);
+        }
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
@@ -15,7 +20,7 @@
             color: #1e293b;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1300px;
             margin: 20px auto;
             padding: 25px;
             background: white;
@@ -33,59 +38,227 @@
             margin-top: 0;
             margin-bottom: 30px;
         }
-        .volver-link {
+
+        .filters-panel {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-start;
+            border: 1px solid #e2e8f0;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 200px;
+        }
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #475569;
+        }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95em;
+            background-color: white;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--borgoña);
+            box-shadow: 0 0 0 3px var(--borgoña-light);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            padding: 5px 0;
+        }
+        .checkbox-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9em;
+            color: #334155;
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-item input[type="checkbox"] {
+            accent-color: var(--borgoña);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .abreviaturas-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+        .abreviaturas-link {
+            display: inline-block;
+            padding: 6px 14px;
+            background-color: var(--borgoña);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8em;
+            transition: all 0.2s;
+        }
+        .abreviaturas-link:hover {
+            background-color: var(--borgoña-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            text-decoration: none;
+        }
+
+        #resultado-conteo {
+            text-align: center;
+            font-size: 1rem;
+            color: #475569;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+            border-color: var(--borgoña);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .estilo-badge {
+            background-color: var(--borgoña);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .fecha-badge {
+            font-size: 0.8em;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .meta-line {
+            font-size: 0.85em;
+            color: #475569;
+            margin-bottom: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .meta-line span {
+            background: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .descripcion {
+            flex-grow: 1;
+            color: #334155;
+            font-size: 0.95em;
+        }
+        .descripcion p {
+            margin-bottom: 2px;
+        }
+        .donde {
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #0ea5e9;
+            font-weight: 500;
+            font-style: italic;
+        }
+        .donde::before {
+            content: "📍 ";
+            font-style: normal;
+        }
+        details {
+            margin-top: 2px;
+            cursor: pointer;
+            color: var(--borgoña);
+            font-weight: 500;
+        }
+        summary {
+            list-style: none;
+            padding-left: 24px;
+            position: relative;
+        }
+        summary::before {
+            content: '▼';
+            position: absolute;
+            left: 0;
+            color: var(--borgoña);
+            font-size: 0.8em;
+        }
+        details[open] summary::before {
+            content: '▲';
+        }
+        .descripcion-larga {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8fafc;
+            border-left: 3px solid var(--borgoña);
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .video-link {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            margin-bottom: 20px;
-            padding: 8px 16px;
-            background-color: #f1f5f9;
-            color: #0f172a;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 0.9em;
-            transition: all 0.2s;
-        }
-        .volver-link:hover {
-            background-color: #e2e8f0;
-            text-decoration: none;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 0.95em;
-            line-height: 1.4;
-        }
-        thead {
-            background-color: #0f172a;
+            margin-top: 12px;
+            padding: 8px 14px;
+            background-color: var(--borgoña);
             color: white;
-        }
-        th {
-            padding: 8px 12px;
-            text-align: left;
+            text-decoration: none;
+            border-radius: 20px;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            font-size: 0.85em;
+            transition: all 0.2s;
+            align-self: flex-start;
         }
-        td {
-            padding: 6px 12px;
-            border-bottom: 1px solid #e2e8f0;
+        .video-link:hover {
+            background-color: var(--borgoña-hover);
+            transform: scale(1.03);
+            text-decoration: none;
         }
-        tbody tr:hover {
-            background-color: #f8fafc;
-        }
-        .abreviatura {
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: 700;
-            color: #800020;
-            background: #fef2f2;
-            padding: 3px 10px;
-            border-radius: 6px;
-            display: inline-block;
+        .video-link::before {
+            content: "▶";
+            font-size: 0.8em;
         }
         .error-message {
-            color: #800020;
+            color: var(--borgoña);
             text-align: center;
             padding: 40px;
             font-size: 1.1em;
@@ -94,22 +267,30 @@
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="volver-link">← Volver a la bitácora</a>
-        <h1>📋 Abreviaturas</h1>
-        <p class="subtitle">Abreviaturas y nomenclatura utilizada en la bitácora</p>
+        <h1>🕺💃 Bitácora de Pasos de Baile</h1>
+        <p class="subtitle">Salsa, Bachata, Lindy Hop, Merengue, Porro y más</p>
 
-        <table id="tabla-convenciones">
-            <thead>
-                <tr>
-                    <th>Abreviatura</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                </tr>
-            </thead>
-            <tbody id="tbody-convenciones">
-                <!-- Se llenará dinámicamente -->
-            </tbody>
-        </table>
+        <div class="abreviaturas-wrapper">
+            <a href="convenciones.html" class="abreviaturas-link" title="Ver abreviaturas">📋 Abreviaturas</a>
+        </div>
+
+        <div class="filters-panel">
+            <div class="filter-group">
+                <label>🎵 Ritmo</label>
+                <div id="filtroEstilo" class="checkbox-group"></div>
+            </div>
+            <div class="filter-group">
+                <label>🏷️ Tipo</label>
+                <div id="filtroTipo" class="checkbox-group"></div>
+            </div>
+            <div class="filter-group">
+                <label for="filtroTexto">🔍 Buscar</label>
+                <input type="text" id="filtroTexto" placeholder="Ej: giro, academia, Carla...">
+            </div>
+        </div>
+
+        <div id="resultado-conteo"></div>
+        <div id="grid"></div>
     </div>
 
     <script>
@@ -136,34 +317,74 @@
                 .replace(/â€™/g, "'");
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const tbody = document.getElementById('tbody-convenciones');
+        function esDispositivoMovil() {
+            return /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
 
-            fetch('convenciones.csv')
+        function generarEnlaceVideo(url) {
+            if (!url) return null;
+            url = url.trim();
+            if (esDispositivoMovil()) {
+                let videoId = null;
+                const matchWatch = url.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/);
+                const matchShort = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+                if (matchWatch) videoId = matchWatch[1];
+                else if (matchShort) videoId = matchShort[1];
+                if (videoId) return `vnd.youtube://${videoId}`;
+            }
+            return url;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('grid');
+            const resultadoConteo = document.getElementById('resultado-conteo');
+            const filtroEstilo = document.getElementById('filtroEstilo');
+            const filtroTipo = document.getElementById('filtroTipo');
+            const filtroTexto = document.getElementById('filtroTexto');
+
+            let todosLosPasos = [];
+
+            fetch('pasos_baile.csv')
                 .then(response => {
-                    if (!response.ok) throw new Error('No se pudo cargar convenciones.csv. Verifica que esté en la misma carpeta.');
+                    if (!response.ok) throw new Error('No se pudo cargar pasos_baile.csv.');
                     return response.text();
                 })
                 .then(csvText => {
-                    const convenciones = parseCSV(csvText);
-                    console.log(`✅ Total de convenciones cargadas: ${convenciones.length}`);
-                    mostrarConvenciones(convenciones);
+                    console.log('📄 CSV recibido.');
+                    todosLosPasos = parseCSV(csvText);
+                    console.log(`✅ Total de pasos cargados: ${todosLosPasos.length}`);
+                    
+                    todosLosPasos.sort((a, b) => {
+                        const ritmoA = (a.estilo || '').toLowerCase();
+                        const ritmoB = (b.estilo || '').toLowerCase();
+                        if (ritmoA < ritmoB) return -1;
+                        if (ritmoA > ritmoB) return 1;
+                        
+                        const codigoA = a.codigo || 'ZZZ';
+                        const codigoB = b.codigo || 'ZZZ';
+                        if (codigoA < codigoB) return -1;
+                        if (codigoA > codigoB) return 1;
+                        
+                        return 0;
+                    });
+                    
+                    llenarFiltros(todosLosPasos);
+                    mostrarPasos(todosLosPasos);
+
+                    filtroEstilo.addEventListener('change', aplicarFiltros);
+                    filtroTipo.addEventListener('change', aplicarFiltros);
+                    filtroTexto.addEventListener('input', aplicarFiltros);
                 })
                 .catch(error => {
-                    tbody.innerHTML = `<tr><td colspan="3" class="error-message">❌ Error: ${error.message}</td></tr>`;
                     console.error('❌ Error:', error.message);
+                    grid.innerHTML = `<p class="error-message">❌ Error: ${error.message}</p>`;
                 });
 
             function parseCSV(csvText) {
                 const lines = csvText.trim().split('\n');
-                if (lines.length < 2) {
-                    console.warn('⚠️ El CSV tiene menos de 2 líneas.');
-                    return [];
-                }
+                if (lines.length < 2) return [];
                 
                 const headers = lines[0].split(';').map(h => h.trim());
-                console.log('🔤 Encabezados:', headers);
-                
                 const data = [];
                 for (let i = 1; i < lines.length; i++) {
                     const values = lines[i].split(';').map(v => v.trim());
@@ -178,21 +399,119 @@
                 return data;
             }
 
-            function mostrarConvenciones(convenciones) {
-                tbody.innerHTML = '';
-                if (convenciones.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">No hay convenciones registradas.</td></tr>';
-                    return;
-                }
+            function llenarFiltros(data) {
+                const estilos = [...new Set(data.map(p => p.estilo).filter(Boolean))].sort();
+                const tipos = [...new Set(data.map(p => p.tipo).filter(Boolean))].sort();
+
+                filtroEstilo.innerHTML = estilos.map(e => `
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="${e}"> ${e}
+                    </label>
+                `).join('');
+
+                // Agregar opción especial "con video" al final de los tipos
+                const tiposHTML = tipos.map(t => `
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="${t}"> ${t}
+                    </label>
+                `).join('');
+                const videoCheckbox = `
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="__con_video__" id="checkbox-con-video"> 🎥 con video
+                    </label>
+                `;
+                filtroTipo.innerHTML = tiposHTML + videoCheckbox;
+            }
+
+            function aplicarFiltros() {
+                const estilosSeleccionados = [...filtroEstilo.querySelectorAll('input[type="checkbox"]:checked')].map(cb => cb.value);
+                const tiposSeleccionados = [...filtroTipo.querySelectorAll('input[type="checkbox"]:checked')]
+                    .filter(cb => cb.value !== '__con_video__')
+                    .map(cb => cb.value);
+                const conVideoChecked = document.getElementById('checkbox-con-video')?.checked || false;
+                const texto = filtroTexto.value.toLowerCase().trim();
+
+                const filtrados = todosLosPasos.filter(paso => {
+                    if (estilosSeleccionados.length > 0 && !estilosSeleccionados.includes(paso.estilo)) return false;
+
+                    // Lógica de tipo (incluye con video)
+                    if (tiposSeleccionados.length > 0 || conVideoChecked) {
+                        const matchesTipo = tiposSeleccionados.includes(paso.tipo);
+                        const matchesVideo = conVideoChecked && (paso.video || paso.Video || paso.enlace_video);
+                        if (!(matchesTipo || matchesVideo)) return false;
+                    }
+
+                    if (texto) {
+                        const camposABuscar = [
+                            paso.owner_paso,
+                            paso.descripcion_corta,
+                            paso.descripcion_larga,
+                            paso.donde,
+                            paso.estilo,
+                            paso.tipo,
+                            paso.codigo
+                        ];
+                        const hayMatch = camposABuscar.some(campo => 
+                            (campo || '').toLowerCase().includes(texto)
+                        );
+                        if (!hayMatch) return false;
+                    }
+                    return true;
+                });
+
+                mostrarPasos(filtrados);
+            }
+
+            function mostrarPasos(pasos) {
+                grid.innerHTML = '';
                 
-                convenciones.forEach(conv => {
-                    const fila = document.createElement('tr');
-                    fila.innerHTML = `
-                        <td><span class="abreviatura">${conv.Abreviatura || conv.abreviatura || ''}</span></td>
-                        <td><strong>${conv.Nombre || conv.nombre || ''}</strong></td>
-                        <td>${conv.Descripcion || conv.descripcion || ''}</td>
+                if (pasos.length === 0) {
+                    resultadoConteo.textContent = '0 resultados';
+                } else if (pasos.length === 1) {
+                    resultadoConteo.textContent = '1 resultado';
+                } else {
+                    resultadoConteo.textContent = `${pasos.length} resultados`;
+                }
+
+                if (pasos.length === 0) return;
+                
+                pasos.forEach(paso => {
+                    let fechaFormateada = paso.fecha;
+                    try {
+                        const dateObj = new Date(paso.fecha + 'T00:00:00');
+                        if (!isNaN(dateObj.getTime())) {
+                            fechaFormateada = dateObj.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
+                        }
+                    } catch(e) {}
+
+                    const urlVideo = paso.video || paso.Video || '';
+                    const enlaceVideo = urlVideo ? generarEnlaceVideo(urlVideo) : null;
+                    
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <span class="estilo-badge">${paso.estilo || 'Sin ritmo'}${paso.codigo ? ' / ' + paso.codigo : ''}</span>
+                            <span class="fecha-badge">📅 ${fechaFormateada}</span>
+                        </div>
+                        <div class="meta-line">
+                            <span>🏷️ ${paso.tipo || 'Sin tipo'}</span>
+                        </div>
+                        <div class="descripcion">
+                            <p>${paso.descripcion_corta || ''}</p>
+                            ${paso.descripcion_larga ? `
+                            <details>
+                                <summary>Ver descripción completa</summary>
+                                <div class="descripcion-larga">${(paso.descripcion_larga || '').replace(/%/g, '<br>')}</div>
+                            </details>
+                            ` : ''}
+                        </div>
+                        <div class="donde">${paso.donde || ''}</div>
+                        ${enlaceVideo ? `
+                        <a href="${enlaceVideo}" target="_blank" rel="noopener noreferrer" class="video-link">Ver video</a>
+                        ` : ''}
                     `;
-                    tbody.appendChild(fila);
+                    grid.appendChild(card);
                 });
             }
         });
