@@ -72,26 +72,38 @@
             border-color: #e11d48;
             box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
         }
-        .convenciones-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 16px;
-            background-color: #0f172a;
+
+        /* Enlace a Abreviaturas, ahora fuera del panel y estilo borgoña */
+        .abreviaturas-link {
+            display: inline-block;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        .abreviaturas-link a {
+            display: inline-block;
+            padding: 6px 14px;
+            background-color: #800020; /* Borgoña */
             color: white;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 20px;
             font-weight: 600;
-            font-size: 0.9em;
+            font-size: 0.8em;
             transition: all 0.2s;
-            align-self: flex-end;
-            white-space: nowrap;
         }
-        .convenciones-link:hover {
-            background-color: #1e293b;
+        .abreviaturas-link a:hover {
+            background-color: #5a0015;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             text-decoration: none;
+        }
+
+        /* Contador de resultados */
+        #resultado-conteo {
+            text-align: center;
+            font-size: 1rem;
+            color: #475569;
+            margin-bottom: 15px;
+            font-weight: 500;
         }
 
         #grid {
@@ -227,6 +239,12 @@
         <h1>🕺💃 Bitácora de Pasos de Baile</h1>
         <p class="subtitle">Salsa, Bachata, Lindy Hop, Merengue, Porro y más</p>
 
+        <!-- Enlace a Abreviaturas, fuera del panel de filtros y alineado a la derecha -->
+        <div class="abreviaturas-link">
+            <a href="convenciones.html" title="Ver abreviaturas">📋 Abreviaturas</a>
+        </div>
+
+        <!-- Panel de filtros -->
         <div class="filters-panel">
             <div class="filter-group">
                 <label for="filtroEstilo">🎵 Ritmo</label>
@@ -244,9 +262,12 @@
                 <label for="filtroTexto">🔍 Buscar</label>
                 <input type="text" id="filtroTexto" placeholder="Ej: giro, academia, Carla...">
             </div>
-            <a href="convenciones.html" class="convenciones-link" title="Ver convenciones">📋 Convenciones</a>
         </div>
 
+        <!-- Contador de resultados -->
+        <div id="resultado-conteo"></div>
+
+        <!-- Cuadrícula de tarjetas -->
         <div id="grid"></div>
     </div>
 
@@ -294,6 +315,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('grid');
+            const resultadoConteo = document.getElementById('resultado-conteo');
             const filtroEstilo = document.getElementById('filtroEstilo');
             const filtroNivel = document.getElementById('filtroNivel');
             const filtroTipo = document.getElementById('filtroTipo');
@@ -404,6 +426,16 @@
 
             function mostrarPasos(pasos) {
                 grid.innerHTML = '';
+                
+                // Actualizar contador
+                if (pasos.length === 0) {
+                    resultadoConteo.textContent = '0 resultados';
+                } else if (pasos.length === 1) {
+                    resultadoConteo.textContent = '1 resultado';
+                } else {
+                    resultadoConteo.textContent = `${pasos.length} resultados`;
+                }
+
                 if (pasos.length === 0) return;
                 
                 pasos.forEach(paso => {
