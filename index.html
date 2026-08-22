@@ -11,6 +11,7 @@
             --borgoña-hover: #5a0015;
             --borgoña-light: rgba(128, 0, 32, 0.1);
             --logo-height: 50px;
+            --link-descripcion: #800020;
 
             /* Paleta modo claro */
             --bg: #f8fafc;
@@ -34,6 +35,7 @@
             --border: #334155;
             --shadow: 0 4px 20px rgba(0,0,0,0.3);
             --descripcion-bg: #0f1e2e;
+            --link-descripcion: #f87171;
         }
 
         body {
@@ -255,7 +257,7 @@
         details {
             margin-top: 2px;
             cursor: pointer;
-            color: var(--borgoña);
+            color: var(--link-descripcion);
             font-weight: 500;
         }
         summary {
@@ -267,7 +269,7 @@
             content: '▼';
             position: absolute;
             left: 0;
-            color: var(--borgoña);
+            color: var(--link-descripcion);
             font-size: 0.8em;
         }
         details[open] summary::before {
