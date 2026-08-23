@@ -150,12 +150,15 @@
             cursor: pointer;
         }
 
-        .abreviaturas-wrapper {
+        /* Enlaces superiores */
+        .top-links {
             display: flex;
             justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
             margin-bottom: 15px;
         }
-        .abreviaturas-link {
+        .abreviaturas-link, .instagram-link {
             display: inline-block;
             padding: 6px 14px;
             background-color: var(--borgoña);
@@ -166,11 +169,17 @@
             font-size: 0.8em;
             transition: all 0.2s;
         }
-        .abreviaturas-link:hover {
+        .abreviaturas-link:hover, .instagram-link:hover {
             background-color: var(--borgoña-hover);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             text-decoration: none;
+        }
+        .instagram-link {
+            background-color: #c13584;
+        }
+        .instagram-link:hover {
+            background-color: #a12b6b;
         }
 
         #resultado-conteo {
@@ -340,22 +349,28 @@
             transform: scale(1.1);
         }
 
-        /* Footer con Instagram */
-        .instagram-footer {
-            margin-top: 40px;
-            padding: 20px;
+        /* Enlace VIP */
+        .vip-link-container {
             text-align: center;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 1rem;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
-        .instagram-footer a {
-            color: var(--link-descripcion);
+        .vip-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ffd700;
+            color: #1e293b;
             text-decoration: none;
-            font-weight: 600;
+            border-radius: 25px;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
-        .instagram-footer a:hover {
-            text-decoration: underline;
+        .vip-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
         }
     </style>
 </head>
@@ -373,10 +388,13 @@
             <p class="titulo-nivel-3" id="titulo-3">Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...</p>
         </div>
 
-        <div class="abreviaturas-wrapper">
+        <!-- Enlaces superiores -->
+        <div class="top-links">
             <a href="convenciones.html" class="abreviaturas-link" title="Ver abreviaturas">📋 Abreviaturas</a>
+            <a href="https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==" class="instagram-link" target="_blank" rel="noopener noreferrer" title="Instagram">📸 Instagram</a>
         </div>
 
+        <!-- Panel de filtros -->
         <div class="filters-panel">
             <div class="filter-group">
                 <label>🎵 Ritmo</label>
@@ -392,14 +410,13 @@
             </div>
         </div>
 
+        <!-- Enlace VIP -->
+        <div class="vip-link-container">
+            <a href="vip.html" class="vip-link">CONTACTAME PARA VIP</a>
+        </div>
+
         <div id="resultado-conteo"></div>
         <div id="grid"></div>
-
-        <!-- Footer con Instagram -->
-        <div class="instagram-footer">
-            <span>INSTAGRAM:</span>
-            <a href="https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==" target="_blank" rel="noopener noreferrer">@dancenow557</a>
-        </div>
     </div>
 
     <script>
@@ -407,14 +424,14 @@
         const SITE_TITLE = 'DanceNow';
         const SITE_SUBTITLE = 'Bitácora de pasos de baile.';
         const SITE_DESCRIPTION = 'Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...';
-        const INSTAGRAM_URL = 'https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA=='; // 👈 Cambia aquí si es necesario
+        const INSTAGRAM_URL = 'https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==';
 
         // Aplicar textos
         document.title = SITE_TITLE;
         document.getElementById('titulo-1').textContent = SITE_TITLE;
         document.getElementById('titulo-2').textContent = SITE_SUBTITLE;
         document.getElementById('titulo-3').textContent = SITE_DESCRIPTION;
-        document.querySelector('.instagram-footer a').setAttribute('href', INSTAGRAM_URL);
+        document.querySelector('.instagram-link').setAttribute('href', INSTAGRAM_URL);
 
         // ================== MODO OSCURO ==================
         const themeToggle = document.getElementById('theme-toggle');
