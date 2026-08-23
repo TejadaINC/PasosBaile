@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💃</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DanceNow VIP</title>
+    <style>
+        :root {
+            --borgoña: #800020;
+            --borgoña-hover: #5a0015;
+            --borgoña-light: rgba(128, 0, 32, 0.1);
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --text-light: #475569;
+            --text-muted: #64748b;
+            --panel-bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --text: #f1f5f9;
+            --text-light: #cbd5e1;
+            --text-muted: #94a3b8;
+            --panel-bg: #1e293b;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            border-radius: 16px;
+            text-align: center;
+        }
+        h1 {
+            color: var(--borgoña);
+            margin-bottom: 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background-color: var(--panel-bg);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+        }
+        .back-link:hover {
+            background-color: var(--border);
+        }
+        form {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        input[type="email"] {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: var(--panel-bg);
+            color: var(--text);
+        }
+        button {
+            padding: 12px;
+            background-color: var(--borgoña);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: var(--borgoña-hover);
+        }
+        .premium-info {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            text-align: left;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .premium-info strong {
+            color: var(--borgoña);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Volver</a>
+        <h1>🔒 Acceso VIP</h1>
+        <p>Deja tu correo para recibir información exclusiva.</p>
+
+        <!-- Formulario de Google (reemplaza la URL y el entry) -->
+        <form action="YOUR_GOOGLE_FORM_ACTION_URL" method="post" target="_blank">
+            <input type="email" name="entry.xxxxxxxx" placeholder="Tu correo electrónico" required>
+            <button type="submit">Enviar</button>
+        </form>
+
+        <div class="premium-info">
+            <p><strong>CONTACTAME al 3007755697</strong> para acceder a contenido premium:</p>
+            <ul>
+                <li>2 clases presenciales de baile al mes</li>
+                <li>Acceso a contenido exclusivo en la webapp</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
