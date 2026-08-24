@@ -9,7 +9,6 @@
         :root {
             --borgoña: #800020;
             --borgoña-hover: #5a0015;
-            --borgoña-light: rgba(128, 0, 32, 0.1);
             --bg: #f8fafc;
             --text: #1e293b;
             --text-light: #475569;
@@ -106,6 +105,10 @@
         .premium-info strong {
             color: var(--borgoña);
         }
+        .mensaje {
+            margin-top: 15px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -114,11 +117,11 @@
         <h1>🔒 Acceso VIP</h1>
         <p>Deja tu correo para recibir información exclusiva.</p>
 
-        <!-- Formulario de Google (reemplaza la URL y el entry) -->
-        <form action="YOUR_GOOGLE_FORM_ACTION_URL" method="post" target="_blank">
-            <input type="email" name="entry.xxxxxxxx" placeholder="Tu correo electrónico" required>
+        <form id="form-vip">
+            <input type="email" id="email-input" name="email" placeholder="Tu correo electrónico" required>
             <button type="submit">Enviar</button>
         </form>
+        <p id="mensaje" class="mensaje"></p>
 
         <div class="premium-info">
             <p><strong>CONTACTAME al 3007755697</strong> para acceder a contenido premium:</p>
@@ -128,5 +131,42 @@
             </ul>
         </div>
     </div>
+
+    <script>
+        const SCRIPT_URL = 'TU_URL_DE_APPS_SCRIPT'; // 👈 Reemplaza con la URL /exec
+
+        document.getElementById('form-vip').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email-input').value.trim();
+            const mensaje = document.getElementById('mensaje');
+
+            if (!email) {
+                mensaje.textContent = 'Por favor ingresa tu correo.';
+                mensaje.style.color = 'red';
+                return;
+            }
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'email=' + encodeURIComponent(email)
+                });
+
+                const data = await response.json();
+                if (data.result === 'success') {
+                    mensaje.textContent = '✅ ¡Gracias! Tu correo fue registrado.';
+                    mensaje.style.color = 'green';
+                    document.getElementById('email-input').value = '';
+                } else {
+                    mensaje.textContent = '❌ Hubo un error. Inténtalo de nuevo.';
+                    mensaje.style.color = 'red';
+                }
+            } catch (err) {
+                mensaje.textContent = '❌ No se pudo conectar. Verifica tu conexión.';
+                mensaje.style.color = 'red';
+            }
+        });
+    </script>
 </body>
 </html>
