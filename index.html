@@ -157,8 +157,9 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
         }
-        .abreviaturas-link, .instagram-link {
+        .abreviaturas-link, .instagram-link, .vip-link {
             display: inline-block;
             padding: 6px 14px;
             background-color: var(--borgoña);
@@ -169,7 +170,7 @@
             font-size: 0.8em;
             transition: all 0.2s;
         }
-        .abreviaturas-link:hover, .instagram-link:hover {
+        .abreviaturas-link:hover, .instagram-link:hover, .vip-link:hover {
             background-color: var(--borgoña-hover);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
@@ -180,6 +181,15 @@
         }
         .instagram-link:hover {
             background-color: #a12b6b;
+        }
+        .vip-link {
+            background-color: #ffd700;
+            color: #1e293b;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+        .vip-link:hover {
+            background-color: #e6c200;
         }
 
         #resultado-conteo {
@@ -348,30 +358,6 @@
         .theme-toggle:hover {
             transform: scale(1.1);
         }
-
-        /* Enlace VIP */
-        .vip-link-container {
-            text-align: center;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-        .vip-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #ffd700;
-            color: #1e293b;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: 800;
-            font-size: 1rem;
-            letter-spacing: 0.5px;
-            transition: all 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-        .vip-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-        }
     </style>
 </head>
 <body>
@@ -388,10 +374,11 @@
             <p class="titulo-nivel-3" id="titulo-3">Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...</p>
         </div>
 
-        <!-- Enlaces superiores -->
+        <!-- Enlaces superiores: VIP, Instagram, Abreviaturas -->
         <div class="top-links">
-            <a href="convenciones.html" class="abreviaturas-link" title="Ver abreviaturas">📋 Abreviaturas</a>
+            <a href="vip.html" class="vip-link" title="Contacto VIP">CONTACTAME PARA VIP</a>
             <a href="https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==" class="instagram-link" target="_blank" rel="noopener noreferrer" title="Instagram">📸 Instagram</a>
+            <a href="convenciones.html" class="abreviaturas-link" title="Ver abreviaturas">📋 Abreviaturas</a>
         </div>
 
         <!-- Panel de filtros -->
@@ -410,11 +397,6 @@
             </div>
         </div>
 
-        <!-- Enlace VIP -->
-        <div class="vip-link-container">
-            <a href="vip.html" class="vip-link">CONTACTAME PARA VIP</a>
-        </div>
-
         <div id="resultado-conteo"></div>
         <div id="grid"></div>
     </div>
@@ -426,7 +408,6 @@
         const SITE_DESCRIPTION = 'Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...';
         const INSTAGRAM_URL = 'https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==';
 
-        // Aplicar textos
         document.title = SITE_TITLE;
         document.getElementById('titulo-1').textContent = SITE_TITLE;
         document.getElementById('titulo-2').textContent = SITE_SUBTITLE;
