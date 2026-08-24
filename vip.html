@@ -38,9 +38,9 @@
             transition: background-color 0.3s, color 0.3s;
         }
         .container {
-            max-width: 600px;
+            max-width: 480px;
             margin: 40px auto;
-            padding: 30px;
+            padding: 25px;
             background: var(--card-bg);
             box-shadow: var(--shadow);
             border-radius: 16px;
@@ -48,44 +48,48 @@
         }
         h1 {
             color: var(--borgoña);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
         }
         .back-link {
             display: inline-block;
-            margin-bottom: 20px;
-            padding: 8px 16px;
+            margin-bottom: 15px;
+            padding: 6px 14px;
             background-color: var(--panel-bg);
             color: var(--text);
             text-decoration: none;
             border-radius: 20px;
             font-weight: 600;
-            font-size: 0.9em;
+            font-size: 0.85em;
             transition: background-color 0.2s;
         }
         .back-link:hover {
             background-color: var(--border);
         }
         form {
-            margin-top: 30px;
+            margin-top: 20px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
         }
         input[type="email"] {
-            padding: 12px;
+            padding: 10px;
             border: 1px solid var(--border);
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             background-color: var(--panel-bg);
             color: var(--text);
         }
         button {
-            padding: 12px;
+            padding: 10px;
             background-color: var(--borgoña);
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.2s;
@@ -94,20 +98,21 @@
             background-color: var(--borgoña-hover);
         }
         .premium-info {
-            margin-top: 30px;
-            padding: 20px;
+            margin-top: 25px;
+            padding: 18px;
             background-color: var(--panel-bg);
             border-radius: 12px;
             text-align: left;
-            font-size: 1rem;
-            line-height: 1.6;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
         .premium-info strong {
             color: var(--borgoña);
         }
         .mensaje {
-            margin-top: 15px;
+            margin-top: 12px;
             font-weight: 600;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -133,7 +138,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwTCMuLEOZDKxNdduMg7pOS2QbRzy4TdQKH65OdXyQ2kdqm-zqGWw5Hqe0AsIAEHXhlBA/exec'; // 👈 Reemplaza con la URL /exec
+        const SCRIPT_URL = 'TU_URL_DE_APPS_SCRIPT'; // 👈 Reemplaza con tu URL /exec
 
         document.getElementById('form-vip').addEventListener('submit', async (e) => {
             e.preventDefault();
