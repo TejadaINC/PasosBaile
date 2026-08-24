@@ -7,13 +7,12 @@
     <title>DanceNow</title>
     <style>
         :root {
-            --borgoña: #800020;
-            --borgoña-hover: #5a0015;
-            --borgoña-light: rgba(128, 0, 32, 0.1);
+            --borgoña: #a83a56;
+            --borgoña-hover: #8f2e47;
+            --borgoña-light: rgba(168, 58, 86, 0.12);
             --logo-height: 50px;
-            --link-descripcion: #800020;
+            --link-descripcion: #a83a56;
 
-            /* Paleta modo claro */
             --bg: #f8fafc;
             --text: #1e293b;
             --text-light: #475569;
@@ -35,7 +34,7 @@
             --border: #334155;
             --shadow: 0 4px 20px rgba(0,0,0,0.3);
             --descripcion-bg: #0f1e2e;
-            --link-descripcion: #f87171;
+            --link-descripcion: #f09db0;
         }
 
         body {
@@ -57,7 +56,6 @@
             transition: background-color 0.3s, box-shadow 0.3s;
         }
 
-        /* ========== TITULO EN 3 NIVELES ========== */
         .header-titulo {
             text-align: center;
             margin-bottom: 30px;
@@ -150,7 +148,6 @@
             cursor: pointer;
         }
 
-        /* Enlaces superiores */
         .top-links {
             display: flex;
             justify-content: flex-end;
@@ -177,19 +174,19 @@
             text-decoration: none;
         }
         .instagram-link {
-            background-color: #c13584;
+            background-color: var(--borgoña);
         }
         .instagram-link:hover {
-            background-color: #a12b6b;
+            background-color: var(--borgoña-hover);
         }
         .vip-link {
-            background-color: #ffd700;
-            color: #1e293b;
+            background-color: var(--borgoña);
+            color: white;
             font-weight: 800;
             letter-spacing: 0.3px;
         }
         .vip-link:hover {
-            background-color: #e6c200;
+            background-color: var(--borgoña-hover);
         }
 
         #resultado-conteo {
@@ -335,7 +332,6 @@
             font-size: 1.1em;
         }
 
-        /* Botón de modo oscuro */
         .theme-toggle {
             position: fixed;
             top: 15px;
@@ -364,7 +360,6 @@
     <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
 
     <div class="container">
-        <!-- TITULO EN 3 NIVELES -->
         <div class="header-titulo">
             <h1 class="titulo-nivel-1">
                 <img src="logo.jpg" alt="Logo" style="height: var(--logo-height);">
@@ -374,14 +369,12 @@
             <p class="titulo-nivel-3" id="titulo-3">Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...</p>
         </div>
 
-        <!-- Enlaces superiores: VIP, Instagram, Abreviaturas -->
         <div class="top-links">
             <a href="vip.html" class="vip-link" title="Contacto VIP">CONTACTAME PARA VIP</a>
             <a href="https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==" class="instagram-link" target="_blank" rel="noopener noreferrer" title="Instagram">📸 Instagram</a>
             <a href="convenciones.html" class="abreviaturas-link" title="Ver abreviaturas">📋 Abreviaturas</a>
         </div>
 
-        <!-- Panel de filtros -->
         <div class="filters-panel">
             <div class="filter-group">
                 <label>🎵 Ritmo</label>
@@ -402,7 +395,6 @@
     </div>
 
     <script>
-        // ================== CONFIGURACIÓN GENERAL ==================
         const SITE_TITLE = 'DanceNow';
         const SITE_SUBTITLE = 'Bitácora de pasos de baile.';
         const SITE_DESCRIPTION = 'Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...';
@@ -414,7 +406,6 @@
         document.getElementById('titulo-3').textContent = SITE_DESCRIPTION;
         document.querySelector('.instagram-link').setAttribute('href', INSTAGRAM_URL);
 
-        // ================== MODO OSCURO ==================
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
 
@@ -439,7 +430,6 @@
             updateThemeIcon();
         });
 
-        // ================== FUNCIONES AUXILIARES ==================
         function fixEncoding(str) {
             if (!str) return str;
             return str
@@ -481,7 +471,6 @@
             return url;
         }
 
-        // ================== CARGA DE DATOS ==================
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('grid');
             const resultadoConteo = document.getElementById('resultado-conteo');
