@@ -232,24 +232,35 @@
             font-weight: 600;
             letter-spacing: 0.3px;
         }
+        .tipo-badge {
+            background-color: var(--panel-bg);
+            color: var(--text-light);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border: 1px solid var(--border);
+        }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 10px;
+        }
         .fecha-badge {
             font-size: 0.8em;
             color: var(--text-muted);
             font-weight: 500;
         }
-        .meta-line {
-            font-size: 0.85em;
+        .nivel-badge {
+            font-size: 0.8em;
             color: var(--text-light);
-            margin-bottom: 4px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .meta-line span {
-            background: var(--panel-bg);
-            padding: 3px 8px;
-            border-radius: 6px;
             font-weight: 500;
+            background: var(--panel-bg);
+            padding: 3px 10px;
+            border-radius: 6px;
         }
         .descripcion {
             flex-grow: 1;
@@ -258,17 +269,6 @@
         }
         .descripcion p {
             margin-bottom: 2px;
-        }
-        .donde {
-            margin-top: 15px;
-            font-size: 0.85em;
-            color: #0ea5e9;
-            font-weight: 500;
-            font-style: italic;
-        }
-        .donde::before {
-            content: "📍 ";
-            font-style: normal;
         }
         details {
             margin-top: 2px;
@@ -613,10 +613,7 @@
                     card.innerHTML = `
                         <div class="card-header">
                             <span class="estilo-badge">${paso.estilo || 'Sin ritmo'}${paso.codigo ? ' / ' + paso.codigo : ''}</span>
-                            <span class="fecha-badge">📅 ${fechaFormateada}</span>
-                        </div>
-                        <div class="meta-line">
-                            <span>🏷️ ${paso.tipo || 'Sin tipo'}</span>
+                            <span class="tipo-badge">${paso.tipo || 'Sin tipo'}</span>
                         </div>
                         <div class="descripcion">
                             <p>${paso.descripcion_corta || ''}</p>
@@ -627,10 +624,13 @@
                             </details>
                             ` : ''}
                         </div>
-                        <div class="donde">${paso.donde || ''}</div>
                         ${enlaceVideo ? `
                         <a href="${enlaceVideo}" target="_blank" rel="noopener noreferrer" class="video-link">Ver video</a>
                         ` : ''}
+                        <div class="card-footer">
+                            <span class="fecha-badge">📅 ${fechaFormateada}</span>
+                            <span class="nivel-badge">📊 ${paso.nivel || 'Sin nivel'}</span>
+                        </div>
                     `;
                     grid.appendChild(card);
                 });
