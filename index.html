@@ -111,20 +111,6 @@
             letter-spacing: 0.5px;
             color: var(--text-light);
         }
-        input[type="text"] {
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.95em;
-            background-color: var(--card-bg);
-            color: var(--text);
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--borgoña);
-            box-shadow: 0 0 0 3px var(--borgoña-light);
-        }
 
         .checkbox-group {
             display: flex;
@@ -150,7 +136,7 @@
 
         .top-links {
             display: flex;
-            justify-content: flex-end;
+            justify-content: flex-start;
             align-items: center;
             gap: 10px;
             margin-bottom: 15px;
@@ -245,14 +231,29 @@
         .card-footer {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-end;
             margin-top: auto;
             padding-top: 10px;
+        }
+        .fecha-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
         .fecha-badge {
             font-size: 0.8em;
             color: var(--text-muted);
             font-weight: 500;
+        }
+        .donde-badge {
+            font-size: 0.8em;
+            color: #0ea5e9;
+            font-weight: 500;
+            font-style: italic;
+        }
+        .donde-badge::before {
+            content: "📍 ";
+            font-style: normal;
         }
         .nivel-badge {
             font-size: 0.8em;
@@ -304,15 +305,15 @@
         .video-link {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            margin-top: 12px;
-            padding: 8px 14px;
+            gap: 5px;
+            margin-top: 10px;
+            padding: 5px 10px;
             background-color: var(--borgoña);
             color: white;
             text-decoration: none;
-            border-radius: 20px;
+            border-radius: 16px;
             font-weight: 600;
-            font-size: 0.85em;
+            font-size: 0.75em;
             transition: all 0.2s;
             align-self: flex-start;
         }
@@ -323,7 +324,7 @@
         }
         .video-link::before {
             content: "▶";
-            font-size: 0.8em;
+            font-size: 0.7em;
         }
         .error-message {
             color: var(--borgoña);
@@ -370,9 +371,9 @@
         </div>
 
         <div class="top-links">
-            <a href="vip.html" class="vip-link" title="Contacto VIP">CONTACTAME PARA VIP</a>
-            <a href="https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==" class="instagram-link" target="_blank" rel="noopener noreferrer" title="Instagram">📸 Instagram</a>
             <a href="convenciones.html" class="abreviaturas-link" title="Ver abreviaturas">📋 Abreviaturas</a>
+            <a href="https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==" class="instagram-link" target="_blank" rel="noopener noreferrer" title="Instagram">📸 Instagram</a>
+            <a href="vip.html" class="vip-link" title="Contacto VIP">Contáctame para VIP</a>
         </div>
 
         <div class="filters-panel">
@@ -383,10 +384,6 @@
             <div class="filter-group">
                 <label>🏷️ Tipo</label>
                 <div id="filtroTipo" class="checkbox-group"></div>
-            </div>
-            <div class="filter-group">
-                <label for="filtroTexto">🔍 Buscar</label>
-                <input type="text" id="filtroTexto" placeholder="Ej: giro, academia, Carla...">
             </div>
         </div>
 
@@ -476,7 +473,6 @@
             const resultadoConteo = document.getElementById('resultado-conteo');
             const filtroEstilo = document.getElementById('filtroEstilo');
             const filtroTipo = document.getElementById('filtroTipo');
-            const filtroTexto = document.getElementById('filtroTexto');
 
             let todosLosPasos = [];
 
@@ -503,7 +499,6 @@
 
                     filtroEstilo.addEventListener('change', aplicarFiltros);
                     filtroTipo.addEventListener('change', aplicarFiltros);
-                    filtroTexto.addEventListener('input', aplicarFiltros);
                 })
                 .catch(error => {
                     grid.innerHTML = `<p class="error-message">❌ Error: ${error.message}</p>`;
@@ -556,7 +551,6 @@
                     .filter(cb => cb.value !== '__con_video__')
                     .map(cb => cb.value);
                 const conVideoChecked = document.getElementById('checkbox-con-video')?.checked || false;
-                const texto = filtroTexto.value.toLowerCase().trim();
 
                 const filtrados = todosLosPasos.filter(paso => {
                     if (estilosSeleccionados.length > 0 && !estilosSeleccionados.includes(paso.estilo)) return false;
@@ -564,19 +558,6 @@
                         const matchesTipo = tiposSeleccionados.includes(paso.tipo);
                         const matchesVideo = conVideoChecked && (paso.video || paso.Video || paso.enlace_video);
                         if (!(matchesTipo || matchesVideo)) return false;
-                    }
-                    if (texto) {
-                        const camposABuscar = [
-                            paso.owner_paso,
-                            paso.descripcion_corta,
-                            paso.descripcion_larga,
-                            paso.donde,
-                            paso.estilo,
-                            paso.tipo,
-                            paso.codigo
-                        ];
-                        const hayMatch = camposABuscar.some(campo => (campo || '').toLowerCase().includes(texto));
-                        if (!hayMatch) return false;
                     }
                     return true;
                 });
@@ -628,7 +609,10 @@
                         <a href="${enlaceVideo}" target="_blank" rel="noopener noreferrer" class="video-link">Ver video</a>
                         ` : ''}
                         <div class="card-footer">
-                            <span class="fecha-badge">📅 ${fechaFormateada}</span>
+                            <div class="fecha-info">
+                                <span class="fecha-badge">📅 ${fechaFormateada}</span>
+                                ${paso.donde ? `<span class="donde-badge">${paso.donde}</span>` : ''}
+                            </div>
                             <span class="nivel-badge">📊 ${paso.nivel || 'Sin nivel'}</span>
                         </div>
                     `;
