@@ -481,7 +481,6 @@
                         return 0;
                     });
                     llenarFiltros(todosLosPasos);
-                    aplicarFiltroDesdeURL();
                     mostrarPasos(todosLosPasos);
 
                     filtroEstilo.addEventListener('change', aplicarFiltros);
@@ -530,32 +529,6 @@
                     </label>
                 `;
                 filtroTipo.innerHTML = tiposHTML + videoCheckbox;
-            }
-
-            function aplicarFiltroDesdeURL() {
-                const params = new URLSearchParams(window.location.search);
-                const ritmoParam = params.get('ritmo');
-                
-                if (!ritmoParam) return;
-                
-                const ritmoNormalizado = ritmoParam.toLowerCase().trim();
-                
-                const checkboxes = filtroEstilo.querySelectorAll('input[type="checkbox"]');
-                
-                checkboxes.forEach(cb => {
-                    const valorNormalizado = cb.value.toLowerCase().trim();
-                    
-                    // Caso especial: "lindy" coincide con "lindy hop"
-                    if (ritmoNormalizado === 'lindy' && valorNormalizado.includes('lindy')) {
-                        cb.checked = true;
-                    }
-                    // Coincidencia exacta
-                    else if (valorNormalizado === ritmoNormalizado) {
-                        cb.checked = true;
-                    }
-                });
-                
-                aplicarFiltros();
             }
 
             function aplicarFiltros() {
