@@ -443,14 +443,33 @@
         function generarEnlaceVideo(url) {
             if (!url) return null;
             url = url.trim();
-            if (esDispositivoMovil()) {
-                let videoId = null;
-                const matchWatch = url.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/);
-                const matchShort = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
-                if (matchWatch) videoId = matchWatch[1];
-                else if (matchShort) videoId = matchShort[1];
-                if (videoId) return `vnd.youtube://${videoId}`;
+
+            let videoId = null;
+            let tiempo = null;
+
+            const matchWatch = url.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/);
+            const matchShort = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+
+            if (matchWatch) {
+                videoId = matchWatch[1];
+                const matchTiempo = url.match(/[?&]t=(\d+)/);
+                if (matchTiempo) tiempo = matchTiempo[1];
+            } else if (matchShort) {
+                videoId = matchShort[1];
+                const matchTiempo = url.match(/[?&]t=(\d+)/);
+                if (matchTiempo) tiempo = matchTiempo[1];
             }
+
+            if (!videoId) return url;
+
+            if (esDispositivoMovil()) {
+                let urlFinal = `https://www.youtube.com/watch?v=${videoId}`;
+                if (tiempo) {
+                    urlFinal += `&t=${tiempo}`;
+                }
+                return urlFinal;
+            }
+
             return url;
         }
 
