@@ -159,21 +159,6 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             text-decoration: none;
         }
-        .instagram-link {
-            background-color: var(--borgoña);
-        }
-        .instagram-link:hover {
-            background-color: var(--borgoña-hover);
-        }
-        .vip-link {
-            background-color: var(--borgoña);
-            color: white;
-            font-weight: 800;
-            letter-spacing: 0.3px;
-        }
-        .vip-link:hover {
-            background-color: var(--borgoña-hover);
-        }
 
         #resultado-conteo {
             text-align: center;
@@ -283,14 +268,13 @@
             position: relative;
         }
         summary::before {
-            content: '▼';
+            content: '🔽';
             position: absolute;
             left: 0;
-            color: var(--link-descripcion);
-            font-size: 0.8em;
+            font-size: 0.9em;
         }
         details[open] summary::before {
-            content: '▲';
+            content: '🔼';
         }
         .descripcion-larga {
             margin-top: 10px;
@@ -495,10 +479,15 @@
                         return 0;
                     });
                     llenarFiltros(todosLosPasos);
+                    aplicarFiltroDesdeURL();  // 👈 Nuevo: leer parámetro de URL
                     mostrarPasos(todosLosPasos);
 
-                    filtroEstilo.addEventListener('change', aplicarFiltros);
-                    filtroTipo.addEventListener('change', aplicarFiltros);
+                    filtroEstilo.addEventListener('change', () => {
+                        aplicarFiltros();
+                    });
+                    filtroTipo.addEventListener('change', () => {
+                        aplicarFiltros();
+                    });
                 })
                 .catch(error => {
                     grid.innerHTML = `<p class="error-message">❌ Error: ${error.message}</p>`;
@@ -543,6 +532,30 @@
                     </label>
                 `;
                 filtroTipo.innerHTML = tiposHTML + videoCheckbox;
+            }
+
+            // 👇 NUEVA FUNCIÓN: Leer parámetro ?ritmo= de la URL
+            function aplicarFiltroDesdeURL() {
+                const params = new URLSearchParams(window.location.search);
+                const ritmoParam = params.get('ritmo');
+                
+                if (!ritmoParam) return;
+                
+                // Normalizar: quitar espacios y comparar sin mayúsculas
+                const ritmoNormalizado = ritmoParam.toLowerCase().trim();
+                
+                const checkboxes = filtroEstilo.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(cb => {
+                    const valorNormalizado = cb.value.toLowerCase().trim();
+                    // Si el checkbox coincide con el ritmo de la URL, lo marcamos
+                    if (valorNormalizado === ritmoNormalizado || 
+                        (ritmoNormalizado === 'lindy' && valorNormalizado.includes('lindy'))) {
+                        cb.checked = true;
+                    }
+                });
+                
+                // Aplicar filtros después de marcar el checkbox
+                aplicarFiltros();
             }
 
             function aplicarFiltros() {
@@ -600,7 +613,7 @@
                             <p>${paso.descripcion_corta || ''}</p>
                             ${paso.descripcion_larga ? `
                             <details>
-                                <summary>Ver descripción completa</summary>
+                                <summary>Click para leer el paso a paso</summary>
                                 <div class="descripcion-larga">${(paso.descripcion_larga || '').replace(/%/g, '<br>')}</div>
                             </details>
                             ` : ''}
