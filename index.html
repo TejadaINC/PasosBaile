@@ -481,7 +481,7 @@
 
             let todosLosPasos = [];
 
-            fetch('pasos_baile.csv')
+            fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRKhAj39keWMbNsFb1nIFv0xnjJNiPtNfry5TJGNqvCm0DplCHKyV6WOIMyHmuinrl-DAJeIs_9HgT2/pub?gid=0&single=true&output=csv')
                 .then(response => {
                     if (!response.ok) throw new Error('No se pudo cargar pasos_baile.csv.');
                     return response.text();
@@ -512,10 +512,10 @@
             function parseCSV(csvText) {
                 const lines = csvText.trim().split('\n');
                 if (lines.length < 2) return [];
-                const headers = lines[0].split(';').map(h => h.trim());
+                const headers = lines[0].split(',').map(h => h.trim());
                 const data = [];
                 for (let i = 1; i < lines.length; i++) {
-                    const values = lines[i].split(';').map(v => v.trim());
+                    const values = lines[i].split(',').map(v => v.trim());
                     if (values.length >= headers.length) {
                         let entry = {};
                         headers.forEach((header, index) => {
