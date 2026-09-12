@@ -382,6 +382,7 @@
         const SITE_SUBTITLE = 'Bitácora de pasos de baile.';
         const SITE_DESCRIPTION = 'Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...';
         const INSTAGRAM_URL = 'https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==';
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRKhAj39keWMbNsFb1nIFv0xnjJNiPtNfry5TJGNqvCm0DplCHKyV6WOIMyHmuinrl-DAJeIs_9HgT2/pub?gid=0&single=true&output=csv'; // 👈 Reemplaza con tu URL publicada como CSV
 
         document.title = SITE_TITLE;
         document.getElementById('titulo-1').textContent = SITE_TITLE;
@@ -473,6 +474,37 @@
             return url;
         }
 
+        // ================== PARSER CSV ROBUSTO ==================
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                const nextChar = line[i + 1];
+
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        // Comilla escapada ("")
+                        current += '"';
+                        i++;
+                    } else {
+                        // Abre o cierra comillas
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    // Separador fuera de comillas
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current.trim());
+            return result;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('grid');
             const resultadoConteo = document.getElementById('resultado-conteo');
@@ -481,9 +513,9 @@
 
             let todosLosPasos = [];
 
-            fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRKhAj39keWMbNsFb1nIFv0xnjJNiPtNfry5TJGNqvCm0DplCHKyV6WOIMyHmuinrl-DAJeIs_9HgT2/pub?gid=0&single=true&output=csv')
+            fetch(CSV_URL)
                 .then(response => {
-                    if (!response.ok) throw new Error('No se pudo cargar pasos_baile.csv.');
+                    if (!response.ok) throw new Error('No se pudo cargar el CSV desde Google Sheets.');
                     return response.text();
                 })
                 .then(csvText => {
@@ -510,12 +542,40 @@
                 });
 
             function parseCSV(csvText) {
-                const lines = csvText.trim().split('\n');
+                // Dividir por líneas respetando saltos dentro de comillas
+                const lines = [];
+                let currentLine = '';
+                let inQuotes = false;
+
+                for (let i = 0; i < csvText.length; i++) {
+                    const char = csvText[i];
+                    const nextChar = csvText[i + 1];
+
+                    if (char === '"') {
+                        if (inQuotes && nextChar === '"') {
+                            currentLine += '"';
+                            i++;
+                        } else {
+                            inQuotes = !inQuotes;
+                            currentLine += char;
+                        }
+                    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+                        if (char === '\r' && nextChar === '\n') i++;
+                        if (currentLine.trim()) lines.push(currentLine);
+                        currentLine = '';
+                    } else {
+                        currentLine += char;
+                    }
+                }
+                if (currentLine.trim()) lines.push(currentLine);
+
                 if (lines.length < 2) return [];
-                const headers = lines[0].split(',').map(h => h.trim());
+
+                const headers = parseCSVLine(lines[0]).map(h => h.trim());
                 const data = [];
+
                 for (let i = 1; i < lines.length; i++) {
-                    const values = lines[i].split(',').map(v => v.trim());
+                    const values = parseCSVLine(lines[i]);
                     if (values.length >= headers.length) {
                         let entry = {};
                         headers.forEach((header, index) => {
