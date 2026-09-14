@@ -193,17 +193,20 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            gap: 10px;
         }
-        .estilo-badge {
+        .codigo-badge {
             background-color: var(--borgoña);
             color: white;
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 0.8em;
-            font-weight: 600;
-            letter-spacing: 0.3px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: nowrap;
         }
-        .tipo-badge {
+        .ritmo-tipo-badge {
             background-color: var(--panel-bg);
             color: var(--text-light);
             padding: 4px 10px;
@@ -212,6 +215,7 @@
             font-weight: 600;
             letter-spacing: 0.3px;
             border: 1px solid var(--border);
+            text-align: right;
         }
         .card-footer {
             display: flex;
@@ -219,16 +223,6 @@
             align-items: flex-end;
             margin-top: auto;
             padding-top: 10px;
-        }
-        .fecha-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .fecha-badge {
-            font-size: 0.8em;
-            color: var(--text-muted);
-            font-weight: 500;
         }
         .donde-badge {
             font-size: 0.8em;
@@ -382,7 +376,7 @@
         const SITE_SUBTITLE = 'Bitácora de pasos de baile.';
         const SITE_DESCRIPTION = 'Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...';
         const INSTAGRAM_URL = 'https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==';
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRKhAj39keWMbNsFb1nIFv0xnjJNiPtNfry5TJGNqvCm0DplCHKyV6WOIMyHmuinrl-DAJeIs_9HgT2/pub?gid=0&single=true&output=csv'; // 👈 Reemplaza con tu URL publicada como CSV
+        const CSV_URL = 'TU_URL_DE_GOOGLE_SHEETS_PUBLICADA'; // 👈 Reemplaza con tu URL publicada como CSV
 
         document.title = SITE_TITLE;
         document.getElementById('titulo-1').textContent = SITE_TITLE;
@@ -486,15 +480,12 @@
 
                 if (char === '"') {
                     if (inQuotes && nextChar === '"') {
-                        // Comilla escapada ("")
                         current += '"';
                         i++;
                     } else {
-                        // Abre o cierra comillas
                         inQuotes = !inQuotes;
                     }
                 } else if (char === ',' && !inQuotes) {
-                    // Separador fuera de comillas
                     result.push(current.trim());
                     current = '';
                 } else {
@@ -542,7 +533,6 @@
                 });
 
             function parseCSV(csvText) {
-                // Dividir por líneas respetando saltos dentro de comillas
                 const lines = [];
                 let currentLine = '';
                 let inQuotes = false;
@@ -643,14 +633,6 @@
                 if (pasos.length === 0) return;
 
                 pasos.forEach(paso => {
-                    let fechaFormateada = paso.fecha;
-                    try {
-                        const dateObj = new Date(paso.fecha + 'T00:00:00');
-                        if (!isNaN(dateObj.getTime())) {
-                            fechaFormateada = dateObj.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
-                        }
-                    } catch(e) {}
-
                     const urlVideo = paso.video || paso.Video || '';
                     const enlaceVideo = urlVideo ? generarEnlaceVideo(urlVideo) : null;
 
@@ -658,8 +640,8 @@
                     card.className = 'card';
                     card.innerHTML = `
                         <div class="card-header">
-                            <span class="estilo-badge">${paso.estilo || 'Sin ritmo'}${paso.codigo ? ' / ' + paso.codigo : ''}</span>
-                            <span class="tipo-badge">${paso.tipo || 'Sin tipo'}</span>
+                            <span class="codigo-badge">${paso.codigo || 'S/N'}</span>
+                            <span class="ritmo-tipo-badge">${paso.estilo || 'Sin ritmo'}${paso.tipo ? ' / ' + paso.tipo : ''}</span>
                         </div>
                         <div class="descripcion">
                             <p>${paso.descripcion_corta || ''}</p>
@@ -674,10 +656,7 @@
                         <a href="${enlaceVideo}" target="_blank" rel="noopener noreferrer" class="video-link">Ver video</a>
                         ` : ''}
                         <div class="card-footer">
-                            <div class="fecha-info">
-                                <span class="fecha-badge">📅 ${fechaFormateada}</span>
-                                ${paso.donde ? `<span class="donde-badge">${paso.donde}</span>` : ''}
-                            </div>
+                            <span class="donde-badge">${paso.donde || ''}</span>
                             <span class="nivel-badge">📊 ${paso.nivel || 'Sin nivel'}</span>
                         </div>
                     `;
