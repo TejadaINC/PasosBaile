@@ -205,6 +205,7 @@
             letter-spacing: 0.5px;
             font-family: 'Courier New', Courier, monospace;
             white-space: nowrap;
+            order: 2;
         }
         .ritmo-tipo-badge {
             background-color: var(--panel-bg);
@@ -215,7 +216,8 @@
             font-weight: 600;
             letter-spacing: 0.3px;
             border: 1px solid var(--border);
-            text-align: right;
+            text-align: left;
+            order: 1;
         }
         .card-footer {
             display: flex;
@@ -247,19 +249,22 @@
             color: var(--text);
             font-size: 0.95em;
         }
-        .descripcion p {
-            margin-bottom: 2px;
+        .descripcion p.descripcion-corta {
+            margin-bottom: 6px;
+            font-weight: 700;
+            color: var(--borgoña);
         }
         details {
             margin-top: 2px;
             cursor: pointer;
             color: var(--link-descripcion);
-            font-weight: 500;
+            font-weight: 400;
         }
         summary {
             list-style: none;
             padding-left: 24px;
             position: relative;
+            font-weight: 400;
         }
         summary::before {
             content: '▼';
@@ -283,28 +288,18 @@
             line-height: 1.5;
         }
         .video-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            display: inline-block;
             margin-top: 10px;
-            padding: 5px 10px;
-            background-color: var(--borgoña);
-            color: white;
+            color: var(--link-descripcion);
             text-decoration: none;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 0.75em;
-            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 0.9em;
+            transition: color 0.2s;
             align-self: flex-start;
         }
         .video-link:hover {
-            background-color: var(--borgoña-hover);
-            transform: scale(1.03);
-            text-decoration: none;
-        }
-        .video-link::before {
-            content: "▶";
-            font-size: 0.7em;
+            text-decoration: underline;
+            color: var(--borgoña-hover);
         }
         .error-message {
             color: var(--borgoña);
@@ -372,11 +367,15 @@
     </div>
 
     <script>
-        const SITE_TITLE = 'DanceNow';
-        const SITE_SUBTITLE = 'Bitácora de pasos de baile.';
-        const SITE_DESCRIPTION = 'Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...';
-        const INSTAGRAM_URL = 'https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==';
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRKhAj39keWMbNsFb1nIFv0xnjJNiPtNfry5TJGNqvCm0DplCHKyV6WOIMyHmuinrl-DAJeIs_9HgT2/pub?output=csv'; // 👈 Reemplaza con tu URL publicada como CSV
+    // ============================================================
+    // ⚙️ CONFIGURACIÓN GENERAL — EDITAR SOLO ESTA SECCIÓN
+    // ============================================================
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRKhAj39keWMbNsFb1nIFv0xnjJNiPtNfry5TJGNqvCm0DplCHKyV6WOIMyHmuinrl-DAJeIs_9HgT2/pub?output=csv'; // 👈 Reemplaza con tu URL publicada como CSV
+    const SITE_TITLE = 'DanceNow';
+    const SITE_SUBTITLE = 'Bitácora de pasos de baile.';
+    const SITE_DESCRIPTION = 'Pasos de Salsa, Bachata, Lindy Hop, Merengue, Tropical, Porro, Champeta y más...';
+    const INSTAGRAM_URL = 'https://www.instagram.com/dancenow557?igsi=MTRienk1ajhlMHY5eA==';
+    // ============================================================
 
         document.title = SITE_TITLE;
         document.getElementById('titulo-1').textContent = SITE_TITLE;
@@ -468,7 +467,6 @@
             return url;
         }
 
-        // ================== PARSER CSV ROBUSTO ==================
         function parseCSVLine(line) {
             const result = [];
             let current = '';
@@ -640,11 +638,11 @@
                     card.className = 'card';
                     card.innerHTML = `
                         <div class="card-header">
-                            <span class="codigo-badge">${paso.codigo || 'S/N'}</span>
                             <span class="ritmo-tipo-badge">${paso.estilo || 'Sin ritmo'}${paso.tipo ? ' / ' + paso.tipo : ''}</span>
+                            <span class="codigo-badge">${paso.codigo || 'S/N'}</span>
                         </div>
                         <div class="descripcion">
-                            <p>${paso.descripcion_corta || ''}</p>
+                            <p class="descripcion-corta">${paso.descripcion_corta || ''}</p>
                             ${paso.descripcion_larga ? `
                             <details>
                                 <summary>Click para leer el paso a paso</summary>
